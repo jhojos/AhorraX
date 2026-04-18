@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AhorraX</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#080C14;--navy:#0D1526;--navy2:#111D35;--navy3:#162040;--navy4:#1A2548;
+  --electric:#2D8EFF;--e2:#4FA3FF;--e3:#7BBEFF;
+  --edim:rgba(45,142,255,.12);--eglow:rgba(45,142,255,.22);
+  --green:#00C47A;--gdim:rgba(0,196,122,.12);
+  --amber:#F5A623;--adim:rgba(245,166,35,.12);
+  --red:#FF5A5A;--rdim:rgba(255,90,90,.12);
+  --frost:rgba(255,255,255,.05);--frost2:rgba(255,255,255,.09);--frost3:rgba(255,255,255,.15);
+  --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--line3:rgba(255,255,255,.2);
+  --t1:#FFFFFF;--t2:rgba(255,255,255,.65);--t3:rgba(255,255,255,.38);
+  --r:14px;--rs:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:"Sora",sans-serif;background:var(--night);color:var(--t1);display:flex;flex-direction:column;align-items:center;}
+.topbar{width:100%;max-width:480px;display:none;align-items:center;justify-content:space-between;padding:14px 20px 10px;position:sticky;top:0;background:var(--night);z-index:100;border-bottom:0.5px solid var(--line);}
+.topbar.on{display:flex;}
+.logo-t{font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.4px;}
+.logo-t span{color:var(--e2);}
+.badge-pro{font-size:10px;font-weight:700;background:var(--electric);color:white;padding:3px 10px;border-radius:99px;}
+.badge-basic{font-size:10px;font-weight:700;background:var(--frost2);color:var(--t3);padding:3px 10px;border-radius:99px;border:0.5px solid var(--line2);}
+.btn-inicio{font-size:12px;color:var(--t3);cursor:pointer;padding:5px 11px;border:0.5px solid var(--line2);border-radius:99px;background:transparent;font-family:"Sora",sans-serif;}
+.navbar{width:100%;max-width:480px;display:none;justify-content:space-around;align-items:center;padding:10px 4px 18px;position:fixed;bottom:0;left:50%;transform:translateX(-50%);background:var(--navy);z-index:100;border-top:0.5px solid var(--line2);}
+.navbar.on{display:flex;}
+.nv{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:.3;transition:opacity .2s;padding:0 5px;}
+.nv.active{opacity:1;}
+.nv svg{width:21px;height:21px;}
+.nv span{font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--t3);text-transform:uppercase;}
+.nv.active span{color:var(--electric);}
+.nv.active svg{color:var(--electric);}
+.fab{position:fixed;bottom:82px;right:20px;width:54px;height:54px;background:var(--electric);border-radius:50%;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:99;box-shadow:0 4px 20px var(--eglow);transition:transform .15s;}
+.fab.on{display:flex;}
+.fab:active{transform:scale(.92);}
+.drawer-overlay{position:fixed;inset:0;background:rgba(8,12,20,.75);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.drawer-overlay.on{display:flex;}
+.drawer{width:100%;max-width:480px;background:var(--navy);border-radius:22px 22px 0 0;padding:24px 20px 48px;animation:slideup .22s ease;border-top:0.5px solid var(--line2);}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.drawer-handle{width:36px;height:4px;background:var(--frost3);border-radius:99px;margin:0 auto 20px;}
+.ginput{background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:14px 16px;font-size:16px;font-family:"Sora",sans-serif;color:var(--t1);width:100%;outline:none;margin-bottom:12px;}
+.ginput::placeholder{color:var(--t3);}
+.ginput:focus{border-color:var(--electric);}
+.qtags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.qtag{font-size:12px;font-weight:600;padding:7px 13px;border-radius:99px;border:0.5px solid var(--line2);cursor:pointer;background:var(--frost);color:var(--t2);}
+.qtag:active{background:var(--edim);border-color:var(--electric);color:var(--e2);}
+.wrap{width:100%;max-width:480px;padding:16px 16px 100px;}
+.screen{display:none;flex-direction:column;gap:12px;animation:fu .22s ease both;}
+.screen.on{display:flex;}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--navy);border-radius:var(--r);border:0.5px solid var(--line2);padding:20px;position:relative;overflow:hidden;}
+.card-e{background:var(--navy2);border-radius:var(--r);border:0.5px solid var(--line2);padding:20px;position:relative;overflow:hidden;}
+.card-e::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--eglow),transparent);}
+h2{font-size:18px;font-weight:700;letter-spacing:-.4px;margin-bottom:4px;color:var(--t1);}
+.sub{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:14px;}
+.lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
+.igroup{position:relative;margin-bottom:10px;}
+.igroup svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--t3);}
+.dinput{width:100%;background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:13px 14px 13px 42px;font-size:14px;font-family:"Sora",sans-serif;color:var(--t1);outline:none;transition:border-color .2s,box-shadow .2s;}
+.dinput::placeholder{color:var(--t3);}
+.dinput:focus{border-color:var(--electric);box-shadow:0 0 0 3px var(--edim);}
+.dp{width:100%;background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:13px 14px;font-size:14px;font-family:"Sora",sans-serif;color:var(--t1);outline:none;transition:border-color .2s;}
+.dp::placeholder{color:var(--t3);}
+.dp:focus{border-color:var(--electric);}
+.dp-lg{font-size:22px;font-weight:700;letter-spacing:-.5px;padding:14px 16px;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ppill{border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--navy2);color:var(--t2);transition:all .18s;}
+.ppill.on{background:var(--edim);border-color:var(--electric);color:var(--e2);}
+.btn{width:100%;padding:14px;border-radius:var(--rs);border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:"Sora",sans-serif;transition:opacity .15s;margin-top:8px;display:block;text-align:center;}
+.btn:active{opacity:.85;}
+.be{background:var(--electric);color:white;}
+.bo{background:transparent;border:0.5px solid var(--line2);color:var(--t2);}
+.bg{background:var(--frost);border:0.5px solid var(--line);color:var(--t2);}
+.tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;white-space:nowrap;letter-spacing:.03em;}
+.te{background:var(--edim);color:var(--e2);}
+.tg{background:var(--gdim);color:var(--green);}
+.ta{background:var(--adim);color:var(--amber);}
+.tr{background:var(--rdim);color:var(--red);}
+.tm{background:var(--frost2);color:var(--t3);}
+.mg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.mg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.met{background:var(--navy2);border:0.5px solid var(--line);border-radius:var(--rs);padding:12px;}
+.ml{font-size:10px;color:var(--t3);margin-bottom:4px;font-weight:500;}
+.mv{font-size:17px;font-weight:700;letter-spacing:-.5px;color:var(--t1);}
+.mv.e{color:var(--e2);}
+.mv.g{color:var(--green);}
+.mv.a{color:var(--amber);}
+.mv.r{color:var(--red);}
+.al{border-radius:var(--rs);padding:12px 14px;margin-bottom:12px;border-left:3px solid;}
+.al.g{background:var(--gdim);border-color:var(--green);}
+.al.g .at{font-size:13px;font-weight:700;color:var(--green);margin-bottom:2px;}
+.al.g .as{font-size:12px;color:rgba(0,196,122,.7);}
+.al.a{background:var(--adim);border-color:var(--amber);}
+.al.a .at{font-size:13px;font-weight:700;color:var(--amber);margin-bottom:2px;}
+.al.a .as{font-size:12px;color:rgba(245,166,35,.7);}
+.al.e{background:var(--edim);border-color:var(--electric);}
+.al.e .at{font-size:13px;font-weight:700;color:var(--e2);margin-bottom:2px;}
+.al.e .as{font-size:12px;color:var(--e3);}
+.al.m{background:var(--frost);border-color:var(--line2);}
+.al.m .at{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.al.m .as{font-size:12px;color:var(--t2);}
+.row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:0.5px solid var(--line);cursor:pointer;}
+.row:last-child{border-bottom:none;}
+.rt{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px;}
+.rs{font-size:12px;color:var(--t2);}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--line);font-size:13px;}
+.irow:last-child{border-bottom:none;}
+.il{color:var(--t2);}
+.cbar-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--line);}
+.cbar-row:last-child{border-bottom:none;}
+.cbar-name{font-size:12px;font-weight:600;width:95px;flex-shrink:0;color:var(--t2);}
+.cbar-track{flex:1;background:var(--frost2);border-radius:99px;height:5px;overflow:hidden;}
+.cbar-fill{height:5px;border-radius:99px;}
+.cbar-amt{font-size:12px;font-weight:700;font-family:"JetBrains Mono",monospace;min-width:72px;text-align:right;color:var(--t1);}
+.pbar{background:var(--frost2);border-radius:99px;height:6px;overflow:hidden;margin:5px 0;}
+.pbar-fill{height:6px;border-radius:99px;transition:width .5s;}
+.notif{background:var(--navy2);border-radius:var(--rs);padding:12px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;border:0.5px solid var(--line);}
+.ndot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.nt{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px;}
+.ns{font-size:12px;color:var(--t2);}
+.prov{border:0.5px solid var(--line2);border-radius:var(--rs);padding:13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--navy2);transition:all .2s;}
+.prov.on{border-color:var(--electric);background:var(--edim);}
+.pn{font-size:13px;font-weight:600;color:var(--t1);}
+.psb{font-size:11px;color:var(--t3);margin-top:2px;}
+.pp{font-size:13px;font-weight:700;color:var(--t1);}
+.prov.on .pp{color:var(--green);}
+.spill{font-size:10px;background:var(--gdim);color:var(--green);padding:2px 7px;border-radius:99px;display:block;margin-top:3px;text-align:right;font-weight:700;}
+.stcard{border:0.5px solid var(--line2);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;background:var(--navy2);}
+.stcard.win{border-color:var(--electric);background:var(--edim);}
+.stnm{font-size:13px;font-weight:600;color:var(--t1);}
+.stcard.win .stnm{color:var(--e2);}
+.stadr{font-size:11px;color:var(--t3);margin-top:2px;}
+.sttot{font-size:15px;font-weight:700;color:var(--t1);}
+.stcard.win .sttot{color:var(--green);}
+.srow{background:var(--navy2);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;border:0.5px solid var(--line);}
+.sn{font-size:13px;font-weight:600;color:var(--t1);}
+.ssb{font-size:11px;color:var(--t3);margin-top:1px;}
+.sa{font-size:13px;font-weight:700;text-align:right;}
+.sa.g{color:var(--green);}
+.sa.a{color:var(--amber);}
+.sa.m{color:var(--t3);}
+.plc{border:0.5px solid var(--line2);border-radius:var(--r);padding:20px;margin-bottom:12px;background:var(--navy2);}
+.plc.ft{border-color:var(--electric);background:var(--edim);}
+.inrow{display:flex;gap:7px;margin-bottom:10px;}
+.inrow input{flex:1;background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:"Sora",sans-serif;}
+.inrow input::placeholder{color:var(--t3);}
+.inrow input:focus{border-color:var(--electric);}
+.inrow select{background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:10px;font-size:13px;color:var(--t1);outline:none;}
+.addbtn{background:var(--electric);color:white;border:none;border-radius:var(--rs);padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:"Sora",sans-serif;}
+.pt{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}
+.pt th{font-size:10px;font-weight:700;color:var(--t3);text-align:center;padding:8px 4px;border-bottom:0.5px solid var(--line);letter-spacing:.04em;}
+.pt th:first-child{text-align:left;}
+.pt td{padding:9px 4px;border-bottom:0.5px solid var(--line);text-align:center;vertical-align:middle;color:var(--t2);}
+.pt td:first-child{text-align:left;font-weight:600;color:var(--t1);}
+.pt tr:last-child td{border-bottom:none;}
+.pt tr.br td{background:var(--edim);}
+.pt tr.tr2 td{background:var(--frost);font-weight:700;color:var(--t1);}
+.bc{color:var(--e2);font-weight:700;}
+.gc{color:var(--green);font-weight:700;}
+.mapa{background:var(--navy2);border-radius:12px;overflow:hidden;position:relative;height:200px;margin-bottom:12px;border:0.5px solid var(--line2);}
+hr.dv{border:none;border-top:0.5px solid var(--line);margin:14px 0;}
+.back{font-size:12px;color:var(--t3);cursor:pointer;margin-bottom:14px;display:inline-flex;align-items:center;gap:4px;font-weight:600;}
+.foot{font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.6;}
+.snote{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t3);margin-top:10px;}
+.stag{background:var(--edim);color:var(--e2);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;}
+.sdot2{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
+.prow{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:0.5px solid var(--line);}
+.prow:last-child{border-bottom:none;}
+.pico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--navy2);}
+.prm{font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;line-height:1;}
+.av{width:42px;height:42px;border-radius:50%;background:var(--electric);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;}
+.store-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--line);font-size:13px;}
+.store-row:last-child{border-bottom:none;}
+#global-back{display:none;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:0.5px solid var(--line2);border-radius:99px;}
+#global-back span{font-size:12px;color:var(--t3);font-weight:600;font-family:"Sora",sans-serif;}
+.session-ban{background:var(--adim);border-radius:var(--rs);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border:0.5px solid rgba(245,166,35,.2);}
+.session-btn{font-size:11px;font-weight:700;background:var(--electric);color:white;border:none;border-radius:6px;padding:7px 13px;cursor:pointer;font-family:"Sora",sans-serif;}
+</style>
+</head>
+<body>
+<!-- FAB -->
+<div class="fab" id="fab" onclick="openDrawer()">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4v14M4 11h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <h2 style="margin-bottom:4px;">Registrar gasto</h2>
+    <p class="sub" style="margin-bottom:14px;">Escribe de forma natural. El sistema clasifica solo.</p>
+    <input class="ginput" id="gasto-input" type="text" placeholder="Ej: almuerzo 8500, Uber 4200..."/>
+    <div class="qtags">
+      <div class="qtag" onclick="setG('Almuerzo')">Almuerzo</div>
+      <div class="qtag" onclick="setG('Transporte')">Transporte</div>
+      <div class="qtag" onclick="setG('Super')">Supermercado</div>
+      <div class="qtag" onclick="setG('Cafe')">Café</div>
+      <div class="qtag" onclick="setG('Farmacia')">Farmacia</div>
+      <div class="qtag" onclick="setG('Otro')">Otro</div>
+    </div>
+    <button class="btn be" onclick="addGasto()">Registrar →</button>
+    <div id="gasto-list" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div id="global-back" onclick="goBack()"><span>← Mi Mes</span></div>
+    <span class="logo-t" id="logo-main" style="display:none;">ahorra<span>X</span></span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="plan-badge" class="badge-basic">Básico</span>
+    <button class="btn-inicio" onclick="resetApp()">Inicio</button>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nv active" id="nv-mimes" onclick="tab('mimes')">
+    <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M5 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>Mi Mes</span>
+  </div>
+  <div class="nv" id="nv-analisis" onclick="tab('analisis')">
+    <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="12" width="4" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="9" y="7" width="4" height="12" rx="1.5" fill="currentColor" opacity=".7"/><rect x="15" y="3" width="4" height="16" rx="1.5" fill="currentColor"/></svg>
+    <span>Análisis</span>
+  </div>
+  <div class="nv" id="nv-sii" onclick="tab('sii')">
+    <svg viewBox="0 0 22 22" fill="none"><rect x="4" y="3" width="14" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6" opacity=".6"/><path d="M8 8h6M8 12h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>SII</span>
+  </div>
+  <div class="nv" id="nv-precios" onclick="tab('precios')">
+    <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6" opacity=".6"/><path d="M8 11h6M11 8v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>Precios</span>
+  </div>
+  <div class="nv" id="nv-remedios" onclick="tab('remedios')">
+    <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="9" width="16" height="10" rx="3" stroke="currentColor" stroke-width="1.6" opacity=".6"/><rect x="7" y="4" width="8" height="6" rx="2" stroke="currentColor" stroke-width="1.6" opacity=".5"/><path d="M9 14h4M11 12v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span>Remedios</span>
+  </div>
+  <div class="nv" id="nv-retail" onclick="tab('retail')">
+    <svg viewBox="0 0 22 22" fill="none"><path d="M3 5h16l-1.5 9H4.5L3 5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" opacity=".6"/><circle cx="8" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+    <span>Retail</span>
+  </div>
+  <div class="nv" id="nv-plan" onclick="tab('plan')">
+    <svg viewBox="0 0 22 22" fill="none"><path d="M11 3l2.5 5.5 6 .7-4.5 4.1 1.2 6L11 16.5 5.8 19.3l1.2-6L2.5 9.2l6-.7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" opacity=".7"/></svg>
+    <span>Plan</span>
+  </div>
+</nav>
+
+<div class="wrap">
+<!-- ONBOARDING -->
+<div class="screen on" id="sc-onboard">
+  <div style="position:fixed;top:-80px;left:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(45,142,255,.15) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
+  <div style="position:fixed;top:220px;right:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(45,142,255,.08) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
+  <div style="position:relative;z-index:1;padding:12px 0 4px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;">
+      <div style="width:38px;height:38px;border-radius:10px;background:var(--electric);display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 7.5H18L13.5 11L15.5 17L10 13.8L4.5 17L6.5 11L2 7.5H8L10 2Z" fill="white"/></svg>
+      </div>
+      <span style="font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;">ahorra<span style="color:var(--e2);">X</span></span>
+    </div>
+    <h2 style="font-size:30px;font-weight:800;color:var(--t1);line-height:1.15;letter-spacing:-.8px;margin-bottom:12px;">Conoce tu dinero.<br><span style="color:var(--e2);">Contrólalo.</span></h2>
+    <p style="font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:28px;">Tu asistente financiero inteligente para Chile. Gastos, precios, remedios y retail en un solo lugar.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;">
+      <div class="card-e" style="padding:14px;"><div style="font-size:22px;font-weight:800;color:var(--green);letter-spacing:-.5px;margin-bottom:3px;">$68.490</div><div style="font-size:11px;color:var(--t3);line-height:1.4;">Diferencia detectada promedio al mes</div></div>
+      <div class="card-e" style="padding:14px;"><div style="font-size:22px;font-weight:800;color:var(--e2);letter-spacing:-.5px;margin-bottom:3px;">34x</div><div style="font-size:11px;color:var(--t3);line-height:1.4;">Diferencia máx. en precio de remedios</div></div>
+      <div class="card-e" style="padding:14px;"><div style="font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.5px;margin-bottom:3px;">40+</div><div style="font-size:11px;color:var(--t3);line-height:1.4;">Tiendas retail comparadas</div></div>
+      <div class="card-e" style="padding:14px;"><div style="font-size:22px;font-weight:800;color:var(--e2);letter-spacing:-.5px;margin-bottom:3px;">SII</div><div style="font-size:11px;color:var(--t3);line-height:1.4;">Gastos laborales detectados</div></div>
+    </div>
+  </div>
+  <div class="card" style="position:relative;z-index:1;">
+    <h2 style="margin-bottom:4px;">Crea tu cuenta</h2>
+    <p class="sub">Guarda tu historial, análisis mensual y alertas inteligentes.</p>
+    <div class="igroup">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input class="dinput" type="text" id="ob-nombre" placeholder="Nombre o apodo"/>
+    </div>
+    <div class="igroup">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M2 6l6 4 6-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input class="dinput" type="email" placeholder="Correo electrónico"/>
+    </div>
+    <div class="igroup" style="margin-bottom:14px;">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="4" y="7" width="8" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input class="dinput" type="password" placeholder="Contraseña"/>
+    </div>
+    <div class="lbl">¿A qué te dedicas?</div>
+    <div class="pgrid">
+      <div class="ppill on" onclick="selPill(this)">Freelancer</div>
+      <div class="ppill" onclick="selPill(this)">Emprendedor</div>
+      <div class="ppill" onclick="selPill(this)">Dependiente</div>
+      <div class="ppill" onclick="selPill(this)">Otro</div>
+    </div>
+    <button class="btn be" onclick="enterApp(true)">Crear cuenta →</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:12px 0;">
+      <div style="flex:1;height:0.5px;background:var(--line);"></div>
+      <span style="font-size:12px;color:var(--t3);">o si prefieres explorar</span>
+      <div style="flex:1;height:0.5px;background:var(--line);"></div>
+    </div>
+    <button class="btn bg" onclick="enterApp(false)">Usar modo básico — sin cuenta</button>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;">
+      <span style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:4px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--electric);opacity:.6;display:inline-block;"></span>Sin publicidad</span>
+      <span style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:4px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--electric);opacity:.6;display:inline-block;"></span>Datos privados</span>
+      <span style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:4px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--electric);opacity:.6;display:inline-block;"></span>Sin permanencia</span>
+    </div>
+  </div>
+</div>
+<!-- MI MES -->
+<div class="screen" id="sc-mimes">
+  <div id="session-ban" class="session-ban" style="display:none;">
+    <div style="font-size:12px;color:var(--amber);font-weight:500;">Modo básico activo — sin registro de cuenta.</div>
+    <button class="session-btn" onclick="tab('plan')">Ver Pro</button>
+  </div>
+
+  <!-- PRO -->
+  <div id="mimes-pro" style="display:none;">
+    <div id="mp-steps" style="display:flex;align-items:center;margin-bottom:16px;padding:0 2px;"></div>
+
+    <!-- P1: INGRESOS -->
+    <div id="mp-step1">
+      <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:22px;border:0.5px solid var(--line2);margin-bottom:12px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--eglow);pointer-events:none;"></div>
+        <div id="mp-welcome-title" style="font-size:24px;font-weight:800;color:var(--t1);letter-spacing:-.6px;margin-bottom:6px;">¡Bienvenido! 👋</div>
+        <div id="mp-welcome-sub" style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:18px;">Vamos a organizar tus finanzas. Son solo 4 pasos y menos de 2 minutos.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:var(--frost);border-radius:var(--rs);padding:10px;border:0.5px solid var(--line);display:flex;align-items:center;gap:8px;"><span style="font-size:18px;">📊</span><div><div style="font-size:11px;color:var(--t1);font-weight:600;">Dashboard real</div><div style="font-size:10px;color:var(--t3);">Se actualiza al instante</div></div></div>
+          <div style="background:var(--frost);border-radius:var(--rs);padding:10px;border:0.5px solid var(--line);display:flex;align-items:center;gap:8px;"><span style="font-size:18px;">🔔</span><div><div style="font-size:11px;color:var(--t1);font-weight:600;">Alertas inteligentes</div><div style="font-size:10px;color:var(--t3);">Detectamos diferencias</div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:6px;">¿Cuánto ganaste este mes?</h2>
+        <p class="sub">Ingresa todos tus ingresos — sueldo, honorarios, arriendos u otros.</p>
+        <div class="lbl">Ingreso principal</div>
+        <input class="dp dp-lg" id="mp-ingreso" type="text" placeholder="$ 1.200.000" style="width:100%;margin-bottom:16px;" oninput="mpRecalc()"/>
+        <div class="lbl">¿Tienes otros ingresos este mes?</div>
+        <div class="inrow">
+          <input type="text" id="mp-otro-n" placeholder="Ej: Proyecto freelance"/>
+          <input type="text" id="mp-otro-m" placeholder="$ monto" style="max-width:130px;"/>
+          <button class="addbtn" onclick="mpAddOtroIng()">+</button>
+        </div>
+        <div id="mp-otros-ing"></div>
+        <div style="background:var(--edim);border-radius:var(--rs);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;border:0.5px solid rgba(45,142,255,.2);">
+          <span style="font-size:12px;color:var(--t3);">Total ingresos</span>
+          <span id="mp-total-ing" style="font-size:20px;font-weight:700;color:var(--e2);">$1.200.000</span>
+        </div>
+        <button class="btn be" onclick="mpGoStep(2)" style="margin-top:14px;">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- P2: FIJOS -->
+    <div id="mp-step2" style="display:none;">
+      <div class="card">
+        <div style="background:var(--gdim);border-radius:var(--rs);padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;border:0.5px solid rgba(0,196,122,.2);">
+          <span style="font-size:16px;">✅</span>
+          <div><div id="mp-ing-confirm" style="font-size:12px;font-weight:700;color:var(--green);">Ingresos registrados</div><div style="font-size:11px;color:rgba(0,196,122,.6);">Ahora tus compromisos fijos.</div></div>
+        </div>
+        <h2 style="margin-bottom:6px;">Gastos fijos mensuales</h2>
+        <p class="sub">Los que pagas todos los meses — arriendo, servicios, suscripciones.</p>
+        <div class="inrow">
+          <input type="text" id="mp-gf-n" placeholder="Ej: Arriendo"/>
+          <input type="text" id="mp-gf-m" placeholder="$ monto" style="max-width:120px;"/>
+          <button class="addbtn" onclick="mpAddFijo()">+</button>
+        </div>
+        <div id="mp-fijos-list">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🏠</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Arriendo</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div><div style="font-size:13px;font-weight:700;color:var(--t1);font-family:'JetBrains Mono',monospace;">$380.000</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📶</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Internet VTR</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div><div style="font-size:13px;font-weight:700;color:var(--t1);font-family:'JetBrains Mono',monospace;">$28.000</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📺</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Netflix</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div><div style="font-size:13px;font-weight:700;color:var(--t1);font-family:'JetBrains Mono',monospace;">$6.990</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🎵</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Spotify</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div><div style="font-size:13px;font-weight:700;color:var(--t1);font-family:'JetBrains Mono',monospace;">$5.500</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+        </div>
+        <div style="background:var(--edim);border-radius:var(--rs);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;border:0.5px solid rgba(45,142,255,.2);">
+          <span style="font-size:12px;color:var(--t3);">Total gastos fijos</span>
+          <span id="mp-total-fijos" style="font-size:20px;font-weight:700;color:var(--e2);">$420.490</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn bo" onclick="mpGoStep(1)" style="margin-top:0;flex:1;">← Volver</button>
+          <button class="btn be" onclick="mpGoStep(3)" style="margin-top:0;flex:2;">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- P3: VARIABLES -->
+    <div id="mp-step3" style="display:none;">
+      <div class="card">
+        <div style="background:var(--gdim);border-radius:var(--rs);padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;border:0.5px solid rgba(0,196,122,.2);">
+          <span style="font-size:16px;">✅</span>
+          <div><div style="font-size:12px;font-weight:700;color:var(--green);">Gastos fijos registrados</div><div style="font-size:11px;color:rgba(0,196,122,.6);">Ahora los que varían cada mes.</div></div>
+        </div>
+        <h2 style="margin-bottom:6px;">Gastos variables del mes</h2>
+        <p class="sub">Los que cambian cada mes — comida, transporte, salidas. Puedes seguir agregándolos con el botón flotante.</p>
+        <div class="inrow">
+          <input type="text" id="mp-gv-n" placeholder="Ej: Almuerzo trabajo"/>
+          <input type="text" id="mp-gv-m" placeholder="$ monto" style="max-width:120px;"/>
+          <button class="addbtn" onclick="mpAddVar()">+</button>
+        </div>
+        <div id="mp-vars-list">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🚗</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Uber / transporte</div><div style="font-size:11px;color:var(--t3);">Transporte</div></div><div style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$38.000</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:36px;height:36px;background:var(--adim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🍽</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Almuerzos trabajo</div><div style="font-size:11px;color:var(--t3);">Alimentación</div></div><div style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$64.000</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;"><div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">⛽</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Copec</div><div style="font-size:11px;color:var(--t3);">Combustible</div></div><div style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$45.000</div><span onclick="this.closest('div[style]').remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span></div>
+        </div>
+        <div style="background:var(--edim);border-radius:var(--rs);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;border:0.5px solid rgba(45,142,255,.2);">
+          <span style="font-size:12px;color:var(--t3);">Total variables</span>
+          <span id="mp-total-vars" style="font-size:20px;font-weight:700;color:var(--e2);">$147.000</span>
+        </div>
+        <p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.6;">Agrega más durante el mes con el botón flotante (+) abajo a la derecha.</p>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn bo" onclick="mpGoStep(2)" style="margin-top:0;flex:1;">← Volver</button>
+          <button class="btn be" onclick="mpGoStep(4)" style="margin-top:0;flex:2;">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- P4: AHORRO -->
+    <div id="mp-step4" style="display:none;">
+      <div class="card">
+        <div style="background:var(--gdim);border-radius:var(--rs);padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;border:0.5px solid rgba(0,196,122,.2);">
+          <span style="font-size:16px;">✅</span>
+          <div><div style="font-size:12px;font-weight:700;color:var(--green);">Gastos variables registrados</div><div style="font-size:11px;color:rgba(0,196,122,.6);">Un último dato y tu dashboard estará listo.</div></div>
+        </div>
+        <h2 style="margin-bottom:6px;">Meta de ahorro mensual</h2>
+        <p class="sub">¿Cuánto quieres reservar este mes? No es obligatorio.</p>
+        <div class="lbl">Monto a reservar</div>
+        <input class="dp dp-lg" id="mp-ahorro" type="text" placeholder="$ 100.000" style="width:100%;margin-bottom:14px;" oninput="mpAhorroUpdate()"/>
+        <div style="background:var(--gdim);border-radius:var(--rs);padding:14px 16px;border:0.5px solid rgba(0,196,122,.2);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:13px;font-weight:600;color:var(--green);">Porcentaje de tu ingreso</span>
+            <span id="mp-ahorro-pct" style="font-size:22px;font-weight:800;color:var(--green);">0%</span>
+          </div>
+          <div style="background:rgba(0,196,122,.15);border-radius:99px;height:8px;overflow:hidden;margin-bottom:8px;">
+            <div id="mp-ahorro-bar" style="height:8px;border-radius:99px;background:var(--green);width:0%;transition:width .4s;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(0,196,122,.5);"><span>0%</span><span>Sugerido: 10–20%</span><span>30%</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px;">
+          <button class="btn bo" onclick="mpGoStep(3)" style="margin-top:0;flex:1;">← Volver</button>
+          <button class="btn be" onclick="mpGoStep(5)" style="margin-top:0;flex:2;">Ver mi dashboard →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- P5: DASHBOARD -->
+    <div id="mp-step5" style="display:none;">
+      <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:22px;border:0.5px solid var(--line2);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:var(--eglow);pointer-events:none;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+          <div>
+            <p id="mp-dash-greeting" style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Abril 2026 · Tu situación financiera</p>
+            <p id="mp-hero-disp" style="font-size:36px;font-weight:800;color:var(--t1);letter-spacing:-1.5px;margin-bottom:3px;">$632.510</p>
+            <p style="font-size:12px;color:var(--t3);">disponible real este mes</p>
+          </div>
+          <div id="user-avatar" class="av">JM</div>
+        </div>
+        <div style="background:rgba(255,255,255,.12);border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px;">
+          <div id="mp-hero-bar" style="height:6px;border-radius:99px;background:var(--green);width:53%;transition:width .5s;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);">
+          <span id="mp-hero-pct">53% del ingreso disponible</span>
+          <span id="mp-hero-ing">de $1.200.000</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbl">Desglose del mes</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--line);"><span style="font-size:14px;font-weight:700;color:var(--t1);">Ingresos totales</span><span id="mp-dd-ing" style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--green);">$1.200.000</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--line);"><span style="font-size:13px;color:var(--t2);"><span style="color:var(--t3);margin-right:4px;">—</span>Gastos fijos</span><span id="mp-dd-fijos" style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$420.490</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--line);"><span style="font-size:13px;color:var(--t2);"><span style="color:var(--t3);margin-right:4px;">—</span>Gastos variables</span><span id="mp-dd-vars" style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$147.000</span></div>
+        <div id="mp-ahorro-row" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--line);"><span style="font-size:13px;color:var(--t2);"><span style="color:var(--t3);margin-right:4px;">—</span>Meta de ahorro</span><span id="mp-dd-ahorro" style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">$0</span></div>
+        <div style="background:var(--edim);border-radius:var(--rs);padding:14px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;border:0.5px solid rgba(45,142,255,.2);"><span style="font-size:15px;font-weight:700;color:var(--e2);">Disponible real</span><span id="mp-dd-disp" style="font-size:22px;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace;">$632.510</span></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Distribución del ingreso</div>
+        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span style="color:var(--t2);">Gastos fijos</span><span id="mp-pct-f" style="font-weight:700;color:var(--t1);">35%</span></div><div class="pbar"><div id="mp-bar-f" class="pbar-fill" style="width:35%;background:var(--electric);"></div></div></div>
+        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span style="color:var(--t2);">Gastos variables</span><span id="mp-pct-v" style="font-weight:700;color:var(--t1);">12%</span></div><div class="pbar"><div id="mp-bar-v" class="pbar-fill" style="width:12%;background:var(--amber);"></div></div></div>
+        <div id="mp-ahorro-dist" style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span style="color:var(--t2);">Meta de ahorro</span><span id="mp-pct-a" style="font-weight:700;color:var(--green);">0%</span></div><div class="pbar"><div id="mp-bar-a" class="pbar-fill" style="width:0%;background:var(--green);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span style="color:var(--green);font-weight:600;">Disponible</span><span id="mp-pct-d" style="font-weight:700;color:var(--green);">53%</span></div><div class="pbar"><div id="mp-bar-d" class="pbar-fill" style="width:53%;background:var(--green);"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Lo que detectó AhorraX</div>
+        <div class="notif"><div class="ndot" style="background:var(--amber);"></div><div><div class="nt">Suscripciones duplicadas</div><div class="ns">Spotify + YouTube Music activos — diferencia $5.490/mes</div></div></div>
+        <div class="notif"><div class="ndot" style="background:var(--electric);"></div><div><div class="nt">Internet — alternativa disponible</div><div class="ns">Diferencia de $9.010 con plan equivalente en el mercado</div></div></div>
+        <div class="notif"><div class="ndot" style="background:var(--e2);"></div><div><div class="nt">Gastos laborales orientativos SII</div><div class="ns">$73.000 detectados — consulta con tu contador</div></div></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Últimos gastos registrados</div>
+        <div id="gastos-mimes">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🚗</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Uber</div><div style="font-size:11px;color:var(--t3);">Transporte · hoy 14:32</div></div><div style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">$8.200</div></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);"><div style="width:34px;height:34px;background:var(--adim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🍽</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Almuerzo trabajo</div><div style="font-size:11px;color:var(--t3);">Alimentación · hoy 13:10</div></div><div style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">$7.500</div></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;"><div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">☕</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Café</div><div style="font-size:11px;color:var(--t3);">Alimentación · ayer</div></div><div style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">$2.800</div></div>
+        </div>
+        <p style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6;">Agrega más gastos con el botón flotante (+).</p>
+      </div>
+      <button class="btn bg" onclick="mpGoStep(1)" style="margin-top:0;">Editar información →</button>
+    </div>
+  </div>
+
+  <!-- BÁSICO -->
+  <div id="mimes-basico" style="display:none;">
+    <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:22px;border:0.5px solid var(--line2);">
+      <p style="font-size:13px;font-weight:700;color:var(--e2);margin-bottom:6px;">Modo básico activo</p>
+      <p style="font-size:12px;color:var(--t2);line-height:1.6;">Puedes usar los comparadores de precios, medicamentos y retail. Para el análisis mensual completo crea una cuenta Pro.</p>
+      <button class="btn be" onclick="tab('plan')" style="margin-top:12px;">Ver plan Pro →</button>
+    </div>
+    <div class="card">
+      <div class="lbl">Comparadores disponibles</div>
+      <div class="row" onclick="tab('precios')"><span class="tag tg">Activo</span><div style="flex:1;"><div class="rt">Comparador de supermercados</div><div class="rs">Compara precios en tu comuna · SERNAC</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row" onclick="tab('remedios')"><span class="tag tg">Activo</span><div style="flex:1;"><div class="rt">Comparador de medicamentos</div><div class="rs">Precios en 4 cadenas · ISP · SERNAC</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row" onclick="tab('retail')"><span class="tag tg">Activo</span><div style="flex:1;"><div class="rt">Comparador retail y tecnología</div><div class="rs">Historial de precios 90 días</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row"><span class="tag tm">Pro</span><div><div class="rt" style="color:var(--t3);">Análisis mensual completo</div><div class="rs">Requiere cuenta Pro</div></div></div>
+      <div class="row"><span class="tag tm">Pro</span><div><div class="rt" style="color:var(--t3);">Alertas inteligentes</div><div class="rs">Requiere cuenta Pro</div></div></div>
+      <div class="row" style="border:none;"><span class="tag tm">Pro</span><div><div class="rt" style="color:var(--t3);">Reporte SII orientativo</div><div class="rs">Requiere cuenta Pro</div></div></div>
+    </div>
+    <div class="card" style="border-color:rgba(245,166,35,.2);background:var(--adim);">
+      <div class="lbl" style="color:var(--amber);">Búsquedas disponibles este mes</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px;">
+        <div style="text-align:center;"><div style="font-size:22px;font-weight:800;color:var(--green);" id="cnt-precios">3</div><div style="font-size:10px;color:var(--t3);">Precios</div></div>
+        <div style="text-align:center;"><div style="font-size:22px;font-weight:800;color:var(--green);" id="cnt-remedios">3</div><div style="font-size:10px;color:var(--t3);">Remedios</div></div>
+        <div style="text-align:center;"><div style="font-size:22px;font-weight:800;color:var(--green);" id="cnt-retail">3</div><div style="font-size:10px;color:var(--t3);">Retail</div></div>
+      </div>
+      <p style="font-size:11px;color:var(--amber);text-align:center;margin-top:10px;">Las búsquedas disponibles se renuevan cada mes.</p>
+    </div>
+  </div>
+</div>
+<!-- ANÁLISIS -->
+<div class="screen" id="sc-analisis">
+  <div id="an-main">
+    <div style="background:var(--gdim);border-radius:var(--rs);padding:11px 14px;border:0.5px solid rgba(0,196,122,.2);"><p style="font-size:12px;font-weight:600;color:var(--green);">Análisis de abril 2026 — toca cada fila para ver el detalle.</p></div>
+    <div class="card">
+      <div class="mg">
+        <div class="met"><div class="ml">Ingresos</div><div class="mv">$1.200.000</div></div>
+        <div class="met"><div class="ml">Gastos</div><div class="mv">$980.000</div></div>
+        <div class="met"><div class="ml">Diferencia</div><div class="mv g">$220.000</div></div>
+      </div>
+      <div class="al a"><div class="at">Diferencia detectada: $68.490/mes</div><div class="as">Entre lo que pagas y alternativas disponibles en el mercado</div></div>
+      <div class="row" onclick="det('internet')"><span class="tag ta">Revisar</span><div style="flex:1;"><div class="rt">Internet — diferencia $9.010/mes</div><div class="rs">Alternativas con las mismas características disponibles</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row" onclick="det('spotify')"><span class="tag tr">Duplicado</span><div style="flex:1;"><div class="rt">Dos servicios de música activos</div><div class="rs">Spotify + YouTube Music — diferencia $5.490/mes</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row" onclick="det('uber')"><span class="tag ta">Comparar</span><div style="flex:1;"><div class="rt">Transporte — sobre promedio del perfil</div><div class="rs">Tu gasto $38.000 · Promedio $22.000</div></div><span style="color:var(--t3);">›</span></div>
+      <div class="row"><span class="tag tg">Ok</span><div><div class="rt">Netflix $6.990</div><div class="rs">Dentro del rango de mercado para Chile</div></div></div>
+      <div class="row" onclick="tab('sii')" style="border:none;"><span class="tag te">SII</span><div style="flex:1;"><div class="rt">Gastos laborales orientativos</div><div class="rs">Copec + Internet — consulta con tu contador</div></div><span style="color:var(--t3);">›</span></div>
+    </div>
+  </div>
+  <div id="an-internet" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="det(null)">← Volver</span>
+      <span class="tag ta" style="display:inline-block;margin-bottom:10px;">Diferencia detectada</span>
+      <h2>Plan de internet</h2>
+      <p class="sub">Diferencia de $9.010 entre tu plan actual y alternativas disponibles con las mismas características.</p>
+      <div class="mg2"><div class="met"><div class="ml">Tu plan actual</div><div class="mv">$28.000</div><div style="font-size:11px;color:var(--t3);margin-top:2px;">VTR 200 Mbps</div></div><div class="met"><div class="ml">Alternativa</div><div class="mv e">$18.990</div><div style="font-size:11px;color:var(--e3);margin-top:2px;">Entel 200 Mbps</div></div></div>
+      <div class="al m"><div class="at">Diferencia en 12 meses: $108.120</div><div class="as">Comparación entre plan actual y alternativa más económica</div></div>
+      <div class="lbl">Alternativas disponibles</div>
+      <div class="prov on" onclick="selProv(this,'Entel Hogar')"><div><div class="pn">Entel Hogar</div><div class="psb">200 Mbps · sin permanencia</div></div><div style="text-align:right;"><div class="pp">$18.990</div><span class="spill">$9.010 menos</span></div></div>
+      <div class="prov" onclick="selProv(this,'Movistar Fibra')"><div><div class="pn">Movistar Fibra</div><div class="psb">200 Mbps · fibra óptica</div></div><div class="pp">$19.990</div></div>
+      <div class="prov" onclick="selProv(this,'Claro Hogar')"><div><div class="pn">Claro Hogar</div><div class="psb">300 Mbps · incluye TV</div></div><div class="pp">$22.990</div></div>
+      <hr class="dv">
+      <div class="irow"><span class="il">Permanencia con VTR</span><span class="tag ta">Verificar</span></div>
+      <div class="irow"><span class="il">Instalación</span><span style="color:var(--t1);">3 a 5 días hábiles</span></div>
+      <button class="btn be" id="cta-i" style="margin-top:14px;">Ver Entel Hogar →</button>
+      <button class="btn bo" onclick="det(null)">Ver otras comparaciones</button>
+      <p class="foot">AhorraX no recibe comisión de ningún proveedor.</p>
+    </div>
+  </div>
+  <div id="an-spotify" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="det(null)">← Volver</span>
+      <span class="tag tr" style="display:inline-block;margin-bottom:10px;">Duplicado detectado</span>
+      <h2>Dos servicios de música activos</h2>
+      <p class="sub">Spotify ($5.500) y YouTube Music ($5.490) activos simultáneamente con catálogos similares.</p>
+      <div class="mg2"><div class="met"><div class="ml">Spotify</div><div class="mv">$5.500</div></div><div class="met"><div class="ml">YouTube Music</div><div class="mv">$5.490</div></div></div>
+      <div class="al m"><div class="at">Diferencia anual entre mantener ambos o uno: $65.880</div><div class="as">Ambos ofrecen catálogos en streaming con características similares</div></div>
+      <button class="btn bo" onclick="det(null)">Ver otras comparaciones</button>
+    </div>
+  </div>
+  <div id="an-uber" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="det(null)">← Volver</span>
+      <span class="tag ta" style="display:inline-block;margin-bottom:10px;">Sobre promedio del perfil</span>
+      <h2>Gasto en transporte</h2>
+      <p class="sub">Tu gasto en Uber fue $38.000. El promedio del mismo perfil en AhorraX es $22.000.</p>
+      <div class="mg"><div class="met"><div class="ml">Tu gasto</div><div class="mv">$38.000</div></div><div class="met"><div class="ml">Promedio perfil</div><div class="mv g">$22.000</div></div><div class="met"><div class="ml">Diferencia</div><div class="mv a">$16.000</div></div></div>
+      <div class="al m"><div class="at">Diferencia acumulada en 3 meses: $48.000</div><div class="as">Comparación con usuarios de perfil similar en AhorraX</div></div>
+      <div class="lbl">Opciones disponibles</div>
+      <div class="srow"><div><div class="sn">Uber Pass</div><div class="ssb">Descuentos en viajes frecuentes</div></div><span class="tag tg">Disponible</span></div>
+      <div class="srow"><div><div class="sn">Cabify</div><div class="ssb">Alternativa disponible en Chile</div></div><span class="tag tm">Comparar</span></div>
+      <button class="btn bo" onclick="det(null)" style="margin-top:8px;">Ver otras comparaciones</button>
+    </div>
+  </div>
+</div>
+
+<!-- SII -->
+<div class="screen" id="sc-sii">
+  <div class="card">
+    <span class="tag te" style="display:inline-block;margin-bottom:12px;">Solo orientativo · valida con tu contador</span>
+    <h2>Gastos laborales orientativos</h2>
+    <p class="sub">AhorraX identifica gastos que podrían ser informados al SII como gastos de actividad. Valida con un contador antes de cualquier declaración.</p>
+    <div style="background:var(--adim);border-radius:var(--rs);padding:11px 13px;margin-bottom:14px;display:flex;gap:10px;border:0.5px solid rgba(245,166,35,.2);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="8" cy="8" r="6" stroke="#F5A623" stroke-width="1.3"/><path d="M8 5v3" stroke="#F5A623" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11" r=".8" fill="#F5A623"/></svg>
+      <p style="font-size:12px;color:var(--amber);line-height:1.5;">Esta información es orientativa. AhorraX no asesora tributariamente.</p>
+    </div>
+    <div class="srow"><div><div class="sn">Internet</div><div class="ssb">Posible gasto de actividad laboral</div></div><div style="text-align:right;"><div class="sa g">$28.000</div><span class="tag tg" style="margin-top:4px;display:inline-block;">Orientativo</span></div></div>
+    <div class="srow"><div><div class="sn">Copec / Combustible</div><div class="ssb">Si el vehículo se usa para actividad laboral</div></div><div style="text-align:right;"><div class="sa g">$45.000</div><span class="tag tg" style="margin-top:4px;display:inline-block;">Orientativo</span></div></div>
+    <div class="srow"><div><div class="sn">Arriendo (parcial)</div><div class="ssb">Si trabajas desde casa · requiere justificación</div></div><div style="text-align:right;"><div class="sa a">$76.000</div><span class="tag ta" style="margin-top:4px;display:inline-block;">Consultar</span></div></div>
+    <div class="srow"><div><div class="sn">Netflix</div><div class="ssb">Difícil de justificar como gasto laboral</div></div><div style="text-align:right;"><div class="sa m">$6.990</div><span class="tag tm" style="margin-top:4px;display:inline-block;">No aplica</span></div></div>
+    <hr class="dv">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div><div style="font-size:11px;color:var(--t3);">Total orientativo detectable</div><div style="font-size:24px;font-weight:800;color:var(--green);letter-spacing:-.5px;">$149.000/mes</div></div>
+      <span class="tag ta">Validar con contador</span>
+    </div>
+    <button class="btn be" style="margin-top:14px;">Generar reporte para mi contador →</button>
+    <p class="foot">AhorraX no asesora tributariamente. El reporte es orientativo.</p>
+  </div>
+</div>
+
+<!-- PRECIOS -->
+<div class="screen" id="sc-precios">
+  <div id="pr-step1">
+    <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:20px;border:0.5px solid var(--line2);">
+      <p style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px;">Comparador de precios</p>
+      <p style="font-size:12px;color:var(--t3);line-height:1.6;margin-bottom:14px;">En Chile el precio de un mismo producto puede variar hasta un 40% entre supermercados de la misma comuna.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--green);">40%</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Variación máx.</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--e2);">4</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Supers</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--t1);">SERNAC</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Datos públicos</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Tu lista de compras</h2>
+      <p class="sub">Agrega los productos de tu canasta habitual.</p>
+      <div class="inrow"><input type="text" placeholder="Ej: Leche 1L" id="pinput"/><select id="pqty"><option>x1</option><option selected>x2</option><option>x3</option></select><button class="addbtn" onclick="addProd()">+</button></div>
+      <div id="plist">
+        <div class="prow"><div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#00C47A" opacity=".4"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Leche entera 1L</div><div style="font-size:12px;color:var(--t3);">x2 unidades</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#F5A623" opacity=".4"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Arroz grado 1 · 1kg</div><div style="font-size:12px;color:var(--t3);">x1 unidad</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#4FA3FF" opacity=".4"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Pan de molde integral</div><div style="font-size:12px;color:var(--t3);">x1 unidad</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#00C47A" opacity=".3"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Aceite vegetal 1L</div><div style="font-size:12px;color:var(--t3);">x1 unidad</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#FF5A5A" opacity=".3"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Detergente líquido 3L</div><div style="font-size:12px;color:var(--t3);">x1 unidad</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--line);">
+        <span style="font-size:12px;color:var(--t3);white-space:nowrap;">Tu comuna:</span>
+        <select style="flex:1;background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:9px;font-size:13px;color:var(--t1);outline:none;"><option>Vitacura</option><option>Las Condes</option><option>Providencia</option><option selected>Ñuñoa</option><option>Santiago Centro</option><option>Maipú</option><option>La Florida</option></select>
+      </div>
+      <button class="btn be" onclick="usarBusqueda('precios')">Comparar precios →</button>
+      <div class="snote"><span class="stag">SERNAC</span>Datos públicos actualizados semanalmente</div>
+    </div>
+  </div>
+  <div id="pr-result" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="document.getElementById('pr-step1').style.display='';document.getElementById('pr-result').style.display='none';scrollTop();">← Cambiar lista</span>
+      <div class="mg"><div class="met"><div class="ml">Tu lista</div><div class="mv">$8.200</div></div><div class="met"><div class="ml">Precio más bajo</div><div class="mv e">$6.890</div></div><div class="met"><div class="ml">Diferencia</div><div class="mv g">$1.310</div></div></div>
+      <div class="al g"><div class="at">Precio total más bajo: Líder Ñuñoa</div><div class="as">Diferencia de $1.310 vs la opción más cara de tu comuna</div></div>
+      <div style="overflow-x:auto;">
+        <table class="pt" style="min-width:320px;">
+          <colgroup><col style="width:30%"><col style="width:17.5%"><col style="width:17.5%"><col style="width:17.5%"><col style="width:17.5%"></colgroup>
+          <thead><tr><th>Producto</th><th><span class="sdot2" style="background:var(--electric);"></span>Líder</th><th><span class="sdot2" style="background:var(--green);"></span>Jumbo</th><th><span class="sdot2" style="background:var(--amber);"></span>Unimarc</th><th><span class="sdot2" style="background:var(--red);"></span>Sta.Isabel</th></tr></thead>
+          <tbody>
+            <tr class="br"><td>Leche x2</td><td class="bc">$1.590</td><td>$1.690</td><td>$1.750</td><td>$1.800</td></tr>
+            <tr><td>Arroz 1kg</td><td>$1.290</td><td class="gc">$1.190</td><td>$1.350</td><td>$1.290</td></tr>
+            <tr class="br"><td>Pan molde</td><td class="bc">$1.490</td><td>$1.690</td><td>$1.590</td><td>$1.550</td></tr>
+            <tr class="br"><td>Aceite 1L</td><td class="bc">$1.290</td><td>$1.390</td><td>$1.450</td><td>$1.490</td></tr>
+            <tr><td>Detergente</td><td>$4.290</td><td>$4.490</td><td class="gc">$3.990</td><td>$4.190</td></tr>
+            <tr class="tr2"><td>TOTAL</td><td class="bc">$6.890</td><td>$7.260</td><td>$7.480</td><td>$7.720</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="al m" style="margin-top:12px;"><div class="at">Combinando tiendas</div><div class="as">Detergente en Unimarc + resto en Líder = diferencia de $1.610 vs una sola tienda</div></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:12px;">Locales más cercanos</h2>
+      <div class="mapa">
+        <svg width="100%" height="200" viewBox="0 0 460 200" style="position:absolute;top:0;left:0;">
+          <rect width="460" height="200" fill="#0D1526"/>
+          <rect x="0" y="52" width="460" height="10" fill="rgba(255,255,255,.05)"/>
+          <rect x="0" y="112" width="460" height="10" fill="rgba(255,255,255,.04)"/>
+          <rect x="80" y="0" width="8" height="200" fill="rgba(255,255,255,.04)"/>
+          <rect x="200" y="0" width="8" height="200" fill="rgba(255,255,255,.03)"/>
+          <rect x="330" y="0" width="8" height="200" fill="rgba(255,255,255,.03)"/>
+          <text x="90" y="48" font-size="9" fill="rgba(255,255,255,.2)" font-family="Sora,sans-serif">Av. Irarrázaval</text>
+          <text x="90" y="108" font-size="9" fill="rgba(255,255,255,.2)" font-family="Sora,sans-serif">Av. Ossa</text>
+          <circle cx="230" cy="100" r="8" fill="rgba(45,142,255,.2)"/><circle cx="230" cy="100" r="4" fill="#2D8EFF"/><circle cx="230" cy="100" r="2" fill="white"/>
+          <circle cx="145" cy="74" r="10" fill="#2D8EFF"/><text x="145" y="78" font-size="8" fill="white" text-anchor="middle" font-weight="600" font-family="Sora,sans-serif">L</text>
+          <rect x="106" y="52" width="78" height="16" rx="4" fill="rgba(13,21,38,.9)"/><text x="145" y="63" font-size="9" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="Sora,sans-serif">Líder · 380m</text>
+          <circle cx="310" cy="84" r="9" fill="#00C47A"/><text x="310" y="88" font-size="8" fill="white" text-anchor="middle" font-weight="600" font-family="Sora,sans-serif">J</text>
+          <rect x="268" y="96" width="84" height="16" rx="4" fill="rgba(13,21,38,.9)"/><text x="310" y="107" font-size="9" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="Sora,sans-serif">Jumbo · 720m</text>
+          <circle cx="168" cy="144" r="9" fill="#F5A623"/><text x="168" y="148" font-size="8" fill="white" text-anchor="middle" font-weight="600" font-family="Sora,sans-serif">U</text>
+          <rect x="122" y="156" width="92" height="16" rx="4" fill="rgba(13,21,38,.9)"/><text x="168" y="167" font-size="9" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="Sora,sans-serif">Unimarc · 950m</text>
+          <circle cx="365" cy="142" r="9" fill="#FF5A5A"/><text x="365" y="146" font-size="8" fill="white" text-anchor="middle" font-weight="600" font-family="Sora,sans-serif">S</text>
+          <rect x="318" y="154" width="95" height="16" rx="4" fill="rgba(13,21,38,.9)"/><text x="365" y="165" font-size="9" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="Sora,sans-serif">Sta. Isabel · 1.2km</text>
+        </svg>
+      </div>
+      <div class="stcard win"><div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span class="sdot2" style="background:var(--electric);"></span><div class="stnm">Líder Ñuñoa</div><span class="tag te" style="font-size:9px;">Más barato</span></div><div class="stadr">Av. Irarrázaval 1880 · 380m</div></div><div style="text-align:right;"><div class="sttot">$6.890</div><div style="font-size:11px;color:var(--green);margin-top:2px;">$1.310 menos</div></div></div>
+      <div class="stcard"><div><div style="display:flex;align-items:center;gap:6px;"><span class="sdot2" style="background:var(--green);"></span><div class="stnm">Jumbo Ñuñoa</div></div><div class="stadr">720m</div></div><div class="sttot">$7.260</div></div>
+      <div class="stcard"><div><div style="display:flex;align-items:center;gap:6px;"><span class="sdot2" style="background:var(--amber);"></span><div class="stnm">Unimarc Ñuñoa</div></div><div class="stadr">950m</div></div><div class="sttot">$7.480</div></div>
+      <button class="btn be">Ver Líder Ñuñoa →</button>
+      <hr class="dv">
+      <div style="display:flex;justify-content:space-between;">
+        <div><div style="font-size:11px;color:var(--t3);">Diferencia acumulada/mes</div><div style="font-size:16px;font-weight:800;color:var(--green);">$5.240/mes</div></div>
+        <div style="text-align:right;"><div style="font-size:11px;color:var(--t3);">Al año</div><div style="font-size:16px;font-weight:800;color:var(--green);">$62.880</div></div>
+      </div>
+      <div class="snote"><span class="stag">SERNAC</span>Actualizado 14 abril 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- REMEDIOS -->
+<div class="screen" id="sc-remedios">
+  <div id="rem-step1">
+    <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:20px;border:0.5px solid var(--line2);">
+      <p style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px;">Comparador de medicamentos</p>
+      <p style="font-size:12px;color:var(--t3);line-height:1.6;margin-bottom:14px;">El mismo medicamento puede costar hasta 34 veces más en una farmacia que en otra.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--red);">34x</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Diferencia máx.</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--e2);">4</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Cadenas</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--t1);">ISP</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Certificado</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Tus medicamentos habituales</h2>
+      <p class="sub">Agrega los remedios que compras regularmente. Comparamos precios y mostramos bioequivalentes certificados por el ISP.</p>
+      <div class="inrow"><input type="text" id="minput" placeholder="Ej: Omeprazol 20mg"/><button class="addbtn" onclick="addMed()">+ Agregar</button></div>
+      <div id="mlist">
+        <div class="prow"><div class="pico" style="background:var(--edim);"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="7" rx="2" fill="#4FA3FF" opacity=".5"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Omeprazol 20mg · 30 cáps.</div><div style="font-size:12px;color:var(--t3);">Uso crónico · mensual</div></div><span class="tag tr" style="margin-right:6px;">Diferencia alta</span><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico" style="background:var(--gdim);"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="7" rx="2" fill="#00C47A" opacity=".5"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Losartán 50mg · 30 comp.</div><div style="font-size:12px;color:var(--t3);">Uso crónico · mensual</div></div><span class="tag tg" style="margin-right:6px;">Precio ok</span><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+        <div class="prow"><div class="pico" style="background:var(--adim);"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="7" rx="2" fill="#F5A623" opacity=".5"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">Atorvastatina 20mg · 30 comp.</div><div style="font-size:12px;color:var(--t3);">Uso crónico · mensual</div></div><span class="tag ta" style="margin-right:6px;">Alternativa</span><span class="prm" onclick="this.closest('.prow').remove()">×</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--line);">
+        <span style="font-size:12px;color:var(--t3);white-space:nowrap;">Tu comuna:</span>
+        <select style="flex:1;background:var(--navy2);border:0.5px solid var(--line2);border-radius:var(--rs);padding:9px;font-size:13px;color:var(--t1);outline:none;"><option selected>Ñuñoa</option><option>Providencia</option><option>Las Condes</option><option>Santiago Centro</option><option>Maipú</option></select>
+      </div>
+      <button class="btn be" onclick="usarBusqueda('remedios')">Comparar precios →</button>
+      <div class="snote"><span class="stag">ISP · SERNAC</span>Datos públicos actualizados semanalmente</div>
+    </div>
+  </div>
+  <div id="rem-result" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="document.getElementById('rem-step1').style.display='';document.getElementById('rem-result').style.display='none';scrollTop();">← Cambiar medicamentos</span>
+      <div class="mg"><div class="met"><div class="ml">Precio actual</div><div class="mv">$42.800</div></div><div class="met"><div class="ml">Precio más bajo</div><div class="mv e">$14.370</div></div><div class="met"><div class="ml">Diferencia</div><div class="mv g">$28.430</div></div></div>
+      <div class="al g"><div class="at">Diferencia detectada: $28.430 este mes</div><div class="as">Entre lo que pagas y el bioequivalente genérico en Dr. Simi Ñuñoa</div></div>
+      <div class="al m"><div class="at">Bioequivalentes — ISP Chile</div><div class="as">Mismo principio activo, misma concentración. Consulta con tu médico ante cualquier duda.</div></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Precio total por farmacia</div>
+      <div class="stcard win"><div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span class="sdot2" style="background:var(--electric);"></span><div class="stnm">Dr. Simi Ñuñoa</div><span class="tag te" style="font-size:9px;">Más barato</span></div><div class="stadr">Av. Irarrázaval 2150 · 420m</div></div><div style="text-align:right;"><div class="sttot">$14.370</div><div style="font-size:11px;color:var(--green);margin-top:2px;">$28.430 menos</div></div></div>
+      <div class="stcard"><div><div style="display:flex;align-items:center;gap:6px;"><span class="sdot2" style="background:var(--green);"></span><div class="stnm">Salcobrand Ñuñoa</div></div><div class="stadr">600m</div></div><div class="sttot">$24.580</div></div>
+      <div class="stcard"><div><div style="display:flex;align-items:center;gap:6px;"><span class="sdot2" style="background:var(--amber);"></span><div class="stnm">Cruz Verde Ñuñoa</div></div><div class="stadr">750m</div></div><div class="sttot">$36.490</div></div>
+      <div class="stcard"><div><div style="display:flex;align-items:center;gap:6px;"><span class="sdot2" style="background:var(--red);"></span><div class="stnm">Ahumada Ñuñoa</div></div><div class="stadr">1.1km</div></div><div class="sttot">$42.800</div></div>
+      <button class="btn be">Ver Dr. Simi Ñuñoa →</button>
+      <hr class="dv">
+      <div style="display:flex;justify-content:space-between;">
+        <div><div style="font-size:11px;color:var(--t3);">Diferencia mensual</div><div style="font-size:16px;font-weight:800;color:var(--green);">$28.430/mes</div></div>
+        <div style="text-align:right;"><div style="font-size:11px;color:var(--t3);">Al año</div><div style="font-size:16px;font-weight:800;color:var(--green);">$341.160</div></div>
+      </div>
+      <div class="snote"><span class="stag">ISP · SERNAC</span>Datos públicos verificados</div>
+    </div>
+  </div>
+</div>
+
+<!-- RETAIL -->
+<div class="screen" id="sc-retail">
+  <div id="ret-step1">
+    <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:20px;border:0.5px solid var(--line2);">
+      <p style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px;">Retail y tecnología</p>
+      <p style="font-size:12px;color:var(--t3);line-height:1.6;margin-bottom:14px;">Compara precios en más de 40 tiendas y consulta tu margen disponible antes de decidir.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--t1);">+40</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Tiendas</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--green);">90 días</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Historial</div></div>
+        <div style="background:var(--frost);border-radius:var(--rs);padding:10px;text-align:center;border:0.5px solid var(--line);"><div style="font-size:16px;font-weight:800;color:var(--e2);">IA</div><div style="font-size:10px;color:var(--t3);margin-top:1px;">Clasificación</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>¿Qué quieres buscar?</h2>
+      <p class="sub">AhorraX compara en Falabella, Ripley, Paris, Mercado Libre y más, mostrando tu margen financiero y opciones de pago disponibles.</p>
+      <div class="inrow"><input type="text" id="rinput" placeholder="Ej: iPhone 16, lavadora Samsung..."/><button class="addbtn" onclick="usarBusqueda('retail')">Buscar →</button></div>
+      <div class="lbl">O elige una categoría</div>
+      <div id="ret-cats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
+        <div onclick="selRCat(this)" style="border:1px solid var(--electric);background:var(--edim);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;"><div style="font-size:10px;font-weight:700;color:var(--e2);">Tecnología</div></div>
+        <div onclick="selRCat(this)" style="border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;background:var(--navy2);"><div style="font-size:10px;font-weight:700;color:var(--t3);">Electrohogar</div></div>
+        <div onclick="selRCat(this)" style="border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;background:var(--navy2);"><div style="font-size:10px;font-weight:700;color:var(--t3);">Moda</div></div>
+        <div onclick="selRCat(this)" style="border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;background:var(--navy2);"><div style="font-size:10px;font-weight:700;color:var(--t3);">Deportes</div></div>
+        <div onclick="selRCat(this)" style="border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;background:var(--navy2);"><div style="font-size:10px;font-weight:700;color:var(--t3);">Juguetes</div></div>
+        <div onclick="selRCat(this)" style="border:0.5px solid var(--line2);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;background:var(--navy2);"><div style="font-size:10px;font-weight:700;color:var(--t3);">Hogar</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="ret-result" style="display:none;">
+    <div class="card">
+      <span class="back" onclick="document.getElementById('ret-step1').style.display='';document.getElementById('ret-result').style.display='none';scrollTop();">← Nueva búsqueda</span>
+      <h2>iPhone 16 128GB</h2>
+      <p class="sub" style="margin-bottom:12px;">Resultados en 8 tiendas · Actualizado hace 2 horas</p>
+      <div style="background:var(--navy2);border-radius:var(--rs);padding:13px;border:0.5px solid var(--line2);margin-bottom:12px;">
+        <p style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;">Tu contexto financiero — abril 2026</p>
+        <div class="mg2"><div class="met"><div class="ml">Margen disponible</div><div class="mv g">$220.000</div></div><div class="met"><div class="ml">Precio del producto</div><div class="mv a">$649.990</div></div></div>
+        <p style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:7px;">Opciones de pago en Falabella</p>
+        <div class="irow" style="padding:5px 0;"><span class="il">Contado</span><span style="font-weight:700;color:var(--t1);">$649.990</span></div>
+        <div class="irow" style="padding:5px 0;"><span class="il">6 cuotas sin interés</span><span style="font-weight:700;color:var(--t1);">$108.332/mes</span></div>
+        <div class="irow" style="padding:5px 0;"><span class="il">12 cuotas sin interés</span><span style="font-weight:700;color:var(--t1);">$54.166/mes</span></div>
+        <div class="irow" style="border:none;padding:5px 0;"><span class="il">24 cuotas con interés</span><span style="font-weight:700;color:var(--t1);">$35.200/mes</span></div>
+        <p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5;">AhorraX no asesora financieramente. Solo muestra tu margen y las opciones publicadas.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="lbl">Mejor precio hoy</div>
+      <div style="border:1px solid var(--electric);border-radius:var(--rs);padding:14px;margin-bottom:12px;background:var(--edim);">
+        <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+          <div style="width:50px;height:50px;border-radius:8px;background:var(--navy2);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:0.5px solid var(--line2);"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="7" y="3" width="14" height="22" rx="3" fill="#4FA3FF" opacity=".3"/><circle cx="14" cy="22" r="1.5" fill="#4FA3FF" opacity=".5"/></svg></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:3px;">iPhone 16 128GB Negro</div><div style="font-size:11px;color:var(--t3);">Falabella · Despacho sin costo</div><div style="display:flex;align-items:baseline;gap:6px;margin-top:6px;"><span style="font-size:20px;font-weight:800;color:var(--green);letter-spacing:-.5px;">$649.990</span><span style="font-size:12px;color:var(--t3);text-decoration:line-through;">$699.990</span><span class="tag tg" style="font-size:10px;">-7%</span></div></div>
+        </div>
+        <div class="al g" style="margin-bottom:10px;"><div class="at">Precio mínimo histórico (90 días)</div><div class="as">El precio actual es el más bajo registrado en los últimos 3 meses.</div></div>
+        <button class="btn be">Ver en Falabella →</button>
+      </div>
+      <div class="lbl">Otras tiendas</div>
+      <div class="store-row"><span style="color:var(--t2);">Ripley</span><div style="text-align:right;"><div style="font-weight:700;color:var(--t1);">$659.990</div><div style="font-size:11px;color:var(--t3);">+$10.000</div></div></div>
+      <div class="store-row"><span style="color:var(--t2);">Paris</span><div style="text-align:right;"><div style="font-weight:700;color:var(--t1);">$669.990</div><div style="font-size:11px;color:var(--t3);">+$20.000</div></div></div>
+      <div class="store-row"><span style="color:var(--t2);">Mercado Libre</span><div style="text-align:right;"><div style="font-weight:700;color:var(--t1);">$679.990</div><div style="font-size:11px;color:var(--t3);">+$30.000</div></div></div>
+      <div class="store-row" style="border:none;"><span style="color:var(--t2);">PC Factory</span><div style="text-align:right;"><div style="font-weight:700;color:var(--t1);">$689.990</div><div style="font-size:11px;color:var(--t3);">+$40.000</div></div></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Historial de precios — 90 días</div>
+      <div style="background:var(--navy2);border-radius:var(--rs);padding:14px;border:0.5px solid var(--line);">
+        <svg width="100%" height="44" viewBox="0 0 300 44" preserveAspectRatio="none" style="display:block;margin-bottom:8px;"><polyline points="0,8 50,14 100,6 150,20 200,16 250,26 300,38" fill="none" stroke="#2D8EFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="38" r="4" fill="#00C47A"/></svg>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <div><div style="color:var(--t3);">Más alto</div><div style="font-weight:700;color:var(--t1);">$729.990</div></div>
+          <div style="text-align:center;"><div style="color:var(--t3);">Promedio</div><div style="font-weight:700;color:var(--t1);">$689.990</div></div>
+          <div style="text-align:right;"><div style="color:var(--green);">Mínimo · Hoy</div><div style="font-weight:700;color:var(--green);">$649.990</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAN -->
+<div class="screen" id="sc-plan">
+  <div style="background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--r);padding:22px;border:0.5px solid var(--line2);position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--eglow);pointer-events:none;"></div>
+    <h2 style="margin-bottom:4px;">Elige tu plan</h2>
+    <p style="font-size:13px;color:var(--t3);">Cancela cuando quieras. Sin letra chica.</p>
+  </div>
+  <div class="plc">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:15px;font-weight:700;color:var(--t1);">Básico</div>
+      <span style="font-size:22px;font-weight:800;color:var(--t1);">$0 <span style="font-size:13px;font-weight:400;color:var(--t3);">/mes</span></span>
+    </div>
+    <div style="font-size:13px;color:var(--t2);line-height:2.2;">· Sin registro de cuenta<br>· Comparador de precios (3 búsquedas disponibles este mes)<br>· Comparador de medicamentos (3 búsquedas disponibles este mes)<br>· Comparador retail (3 búsquedas disponibles este mes)<br>· Sin historial · Sin análisis · Sin alertas</div>
+    <button class="btn bo" onclick="enterApp(false)" style="margin-top:14px;">Usar plan básico</button>
+  </div>
+  <div class="plc ft">
+    <div style="height:2px;background:var(--electric);border-radius:99px 99px 0 0;margin:-20px -20px 16px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:15px;font-weight:700;color:var(--t1);">Pro</div><span class="tag tg">Más completo</span></div>
+      <span style="font-size:22px;font-weight:800;color:var(--e2);">$9.990 <span style="font-size:13px;font-weight:400;color:var(--t3);">/mes</span></span>
+    </div>
+    <div style="font-size:13px;color:var(--t2);line-height:2.2;margin-bottom:14px;">· Registro de cuenta — datos guardados<br>· Registro de gastos con botón flotante<br>· Ingresos, fijos, variables y meta de ahorro<br>· Análisis mensual completo<br>· Detección de patrones de consumo<br>· Alertas inteligentes durante el mes<br>· Comparadores ilimitados<br>· Reporte orientativo SII para contador<br>· Historial de meses anteriores</div>
+    <button class="btn be" onclick="enterApp(true)">Empezar Pro →</button>
+  </div>
+  <p class="foot">Si en 30 días no detectamos diferencias por más de $9.990,<br>te devolvemos el dinero. Sin preguntas.</p>
+</div>
+
+</div>
+
+<script>
+let isPro=false,navHistory=[],busquedas={precios:3,remedios:3,retail:3};
+let mpData={ingresos:1200000,fijos:420490,vars:147000,ahorro:0};
+
+function getCookie(n){return document.cookie.split(";").map(c=>c.trim()).find(c=>c.startsWith(n+"="))?.split("=")[1];}
+function setCookie(n,v){document.cookie=n+"="+v+";max-age=2592000;path=/";}
+function loadCounters(){["precios","remedios","retail"].forEach(k=>{const v=getCookie("ax_"+k);if(v!==undefined)busquedas[k]=parseInt(v);const el=document.getElementById("cnt-"+k);if(el)el.textContent=busquedas[k];});}
+function selPill(el){el.closest(".pgrid").querySelectorAll(".ppill").forEach(p=>p.classList.remove("on"));el.classList.add("on");}
+
+function enterApp(withAccount){
+  isPro=withAccount;
+  document.getElementById("sc-onboard").classList.remove("on");
+  document.getElementById("topbar").classList.add("on");
+  document.getElementById("navbar").classList.add("on");
+  if(withAccount){
+    document.getElementById("fab").classList.add("on");
+    document.getElementById("plan-badge").textContent="Pro";
+    document.getElementById("plan-badge").className="badge-pro";
+    document.getElementById("mimes-pro").style.display="";
+    document.getElementById("mimes-basico").style.display="none";
+    const nombre=document.getElementById("ob-nombre")?.value||"";
+    if(nombre){
+      const initials=nombre.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+      const av=document.getElementById("user-avatar");
+      if(av)av.textContent=initials||"JM";
+      const firstName=nombre.split(" ")[0];
+      const wt=document.getElementById("mp-welcome-title");
+      const ws=document.getElementById("mp-welcome-sub");
+      if(wt)wt.textContent="Hola, "+firstName+"! 👋";
+      if(ws)ws.textContent="Nos alegra tenerte aquí. Vamos a organizar tus finanzas de abril juntos. Son solo 4 pasos.";
+    }
+    setTimeout(()=>mpGoStep(1),100);
+  } else {
+    document.getElementById("plan-badge").textContent="Básico";
+    document.getElementById("plan-badge").className="badge-basic";
+    document.getElementById("session-ban").style.display="flex";
+    document.getElementById("mimes-pro").style.display="none";
+    document.getElementById("mimes-basico").style.display="";
+    loadCounters();
+  }
+  navHistory=["mimes"];
+  updateBackBtn();
+  tab("mimes");
+}
+
+function resetApp(){
+  ["mimes","analisis","sii","precios","remedios","retail","plan"].forEach(t=>document.getElementById("sc-"+t).classList.remove("on"));
+  document.getElementById("topbar").classList.remove("on");
+  document.getElementById("navbar").classList.remove("on");
+  document.getElementById("fab").classList.remove("on");
+  document.getElementById("sc-onboard").classList.add("on");
+  navHistory=[];det(null);scrollTop();
+}
+
+function tab(t){
+  ["mimes","analisis","sii","precios","remedios","retail","plan"].forEach(x=>{
+    document.getElementById("sc-"+x).classList.toggle("on",x===t);
+    const nv=document.getElementById("nv-"+x);if(nv)nv.classList.toggle("active",x===t);
+  });
+  if(t==="analisis")det(null);
+  navHistory.push(t);updateBackBtn();scrollTop();
+}
+
+function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
+
+function goBack(){
+  if(navHistory.length<2)return;
+  navHistory.pop();
+  const prev=navHistory[navHistory.length-1];
+  ["mimes","analisis","sii","precios","remedios","retail","plan"].forEach(x=>{
+    document.getElementById("sc-"+x).classList.toggle("on",x===prev);
+    const nv=document.getElementById("nv-"+x);if(nv)nv.classList.toggle("active",x===prev);
+  });
+  if(prev==="analisis")det(null);
+  updateBackBtn();scrollTop();
+}
+
+function updateBackBtn(){
+  const btn=document.getElementById("global-back");
+  const logo=document.getElementById("logo-main");
+  if(!btn)return;
+  const cur=navHistory[navHistory.length-1];
+  if(navHistory.length<=1||cur==="mimes"){
+    btn.style.display="none";if(logo)logo.style.display="inline";
+  } else {
+    btn.style.display="flex";if(logo)logo.style.display="none";
+    const prev=navHistory[navHistory.length-2];
+    const labels={mimes:"Mi Mes",analisis:"Análisis",sii:"SII",precios:"Precios",remedios:"Remedios",retail:"Retail",plan:"Plan"};
+    btn.querySelector("span").textContent="← "+(labels[prev]||"Volver");
+  }
+}
+
+function det(which){
+  document.getElementById("an-main").style.display=which?"none":"";
+  ["internet","spotify","uber"].forEach(d=>document.getElementById("an-"+d).style.display=d===which?"":"none");
+}
+
+function selProv(el,name){
+  el.closest(".card").querySelectorAll(".prov").forEach(p=>p.classList.remove("on"));
+  el.classList.add("on");
+  const b=document.getElementById("cta-i");if(b)b.textContent="Ver "+name+" →";
+}
+
+function openDrawer(){document.getElementById("drawer-overlay").classList.add("on");setTimeout(()=>document.getElementById("gasto-input").focus(),300);}
+function closeDrawer(e){if(e.target===document.getElementById("drawer-overlay"))document.getElementById("drawer-overlay").classList.remove("on");}
+function setG(txt){document.getElementById("gasto-input").value=txt+" ";}
+function addGasto(){
+  const inp=document.getElementById("gasto-input");
+  if(!inp.value.trim())return;
+  const cats={uber:"🚗",taxi:"🚗",transporte:"🚗",almuerzo:"🍽",comida:"🍽",cafe:"☕",super:"🛒",supermercado:"🛒",farmacia:"💊",netflix:"📺",spotify:"🎵"};
+  const txt=inp.value.toLowerCase();
+  let emoji="💳";
+  for(const[k,v] of Object.entries(cats)){if(txt.includes(k)){emoji=v;break;}}
+  const nums=inp.value.match(/\d[\d.,]*/g);
+  const amt=nums?"$"+parseInt(nums[nums.length-1].replace(/[.,]/g,"")).toLocaleString("es-CL"):"";
+  const name=inp.value.replace(/\d[\d.,]*/g,"").trim()||inp.value;
+  const item=document.createElement("div");
+  item.style.cssText="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);";
+  item.innerHTML=`<div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">${emoji}</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${name}</div><div style="font-size:11px;color:var(--t3);">Registrado ahora</div></div><div style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">${amt}</div>`;
+  document.getElementById("gasto-list").prepend(item.cloneNode(true));
+  const m=document.getElementById("gastos-mimes");if(m)m.prepend(item);
+  inp.value="";setTimeout(()=>document.getElementById("drawer-overlay").classList.remove("on"),300);
+}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.getElementById("drawer-overlay").classList.contains("on"))addGasto();});
+
+function addProd(){
+  const inp=document.getElementById("pinput"),qty=document.getElementById("pqty");
+  if(!inp.value.trim())return;
+  const r=document.createElement("div");r.className="prow";
+  r.innerHTML=`<div class="pico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" fill="#4FA3FF" opacity=".3"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${inp.value}</div><div style="font-size:12px;color:var(--t3);">${qty.value} unidad</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span>`;
+  document.getElementById("plist").appendChild(r);inp.value="";
+}
+
+function usarBusqueda(tipo){
+  if(isPro){if(tipo==="precios")showPR();else if(tipo==="remedios")showMedR();else showRetail();return;}
+  if(busquedas[tipo]<=0){alert("Alcanzaste el límite del plan básico este mes.");tab("plan");return;}
+  busquedas[tipo]--;setCookie("ax_"+tipo,busquedas[tipo]);
+  const el=document.getElementById("cnt-"+tipo);if(el)el.textContent=busquedas[tipo];
+  if(tipo==="precios")showPR();else if(tipo==="remedios")showMedR();else showRetail();
+}
+function showPR(){document.getElementById("pr-step1").style.display="none";document.getElementById("pr-result").style.display="";scrollTop();}
+
+function addMed(){
+  const inp=document.getElementById("minput");if(!inp.value.trim())return;
+  const r=document.createElement("div");r.className="prow";
+  r.innerHTML=`<div class="pico" style="background:var(--edim);"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="7" rx="2" fill="#4FA3FF" opacity=".4"/></svg></div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${inp.value}</div><div style="font-size:12px;color:var(--t3);">Mensual · habitual</div></div><span class="prm" onclick="this.closest('.prow').remove()">×</span>`;
+  document.getElementById("mlist").appendChild(r);inp.value="";
+}
+function showMedR(){document.getElementById("rem-step1").style.display="none";document.getElementById("rem-result").style.display="";scrollTop();}
+
+function selRCat(el){
+  document.querySelectorAll("#ret-cats > div").forEach(c=>{c.style.border="0.5px solid var(--line2)";c.style.background="var(--navy2)";if(c.querySelector("div"))c.querySelector("div").style.color="var(--t3)";});
+  el.style.border="1px solid var(--electric)";el.style.background="var(--edim)";if(el.querySelector("div"))el.querySelector("div").style.color="var(--e2)";
+}
+function showRetail(){document.getElementById("ret-step1").style.display="none";document.getElementById("ret-result").style.display="";scrollTop();}
+
+function mpGoStep(n){
+  for(let i=1;i<=5;i++){const el=document.getElementById("mp-step"+i);if(el)el.style.display=i===n?"":"none";}
+  const labels=["Ingresos","Fijos","Variables","Ahorro","Dashboard"];
+  const bar=document.getElementById("mp-steps");
+  if(bar){
+    bar.innerHTML="";
+    labels.forEach((lbl,i)=>{
+      const idx=i+1,isDone=idx<n,isActive=idx===n;
+      const dot=document.createElement("div");dot.style.cssText="display:flex;flex-direction:column;align-items:center;flex:1;";
+      const circle=document.createElement("div");
+      circle.style.cssText=`width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-bottom:4px;font-family:'Sora',sans-serif;background:${isDone||isActive?"var(--electric)":"var(--navy2)"};border:${isDone||isActive?"none":"1px solid var(--line2)"};color:${isDone||isActive?"white":"var(--t3)"};box-shadow:${isActive?"0 0 0 3px var(--edim)":"none"};`;
+      circle.textContent=isDone?"✓":idx;
+      const lbelEl=document.createElement("div");lbelEl.style.cssText=`font-size:9px;font-weight:700;color:${isActive?"var(--e2)":"var(--t3)"};text-align:center;letter-spacing:.03em;font-family:'Sora',sans-serif;`;lbelEl.textContent=lbl;
+      dot.appendChild(circle);dot.appendChild(lbelEl);bar.appendChild(dot);
+      if(i<4){const line=document.createElement("div");line.style.cssText=`height:1.5px;flex:1;background:${isDone?"var(--electric)":"var(--line2)"};margin-bottom:17px;`;bar.appendChild(line);}
+    });
+  }
+  if(n===2){const el=document.getElementById("mp-ing-confirm");const v=document.getElementById("mp-total-ing")?.textContent||"";if(el&&v)el.textContent="Ingresos registrados: "+v;}
+  if(n===5)mpRecalcDash();
+  scrollTop();
+}
+
+function mpAddOtroIng(){
+  const n=document.getElementById("mp-otro-n"),m=document.getElementById("mp-otro-m");if(!n.value.trim())return;
+  const nums=m.value.match(/\d[\d.,]*/g);const amt=nums?parseInt(nums[0].replace(/[.,]/g,"")):0;
+  const row=document.createElement("div");row.style.cssText="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);";
+  row.innerHTML=`<div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">💰</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${n.value}</div><div style="font-size:11px;color:var(--t3);">Ingreso adicional</div></div><div style="font-size:13px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;">$${amt.toLocaleString("es-CL")}</div><span onclick="this.closest('div').parentElement.remove()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>`;
+  document.getElementById("mp-otros-ing").appendChild(row);mpData.ingresos+=amt;
+  document.getElementById("mp-total-ing").textContent="$"+mpData.ingresos.toLocaleString("es-CL");n.value="";m.value="";
+}
+
+function mpAddFijo(){
+  const n=document.getElementById("mp-gf-n"),m=document.getElementById("mp-gf-m");if(!n.value.trim())return;
+  const nums=m.value.match(/\d[\d.,]*/g);const amt=nums?parseInt(nums[0].replace(/[.,]/g,"")):0;
+  const row=document.createElement("div");row.style.cssText="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);";
+  row.innerHTML=`<div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📌</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${n.value}</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div><div style="font-size:13px;font-weight:700;color:var(--t1);font-family:'JetBrains Mono',monospace;">$${amt.toLocaleString("es-CL")}</div><span onclick="this.closest('div').parentElement.remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>`;
+  document.getElementById("mp-fijos-list").appendChild(row);mpRecalc();n.value="";m.value="";
+}
+
+function mpAddVar(){
+  const n=document.getElementById("mp-gv-n"),m=document.getElementById("mp-gv-m");if(!n.value.trim())return;
+  const nums=m.value.match(/\d[\d.,]*/g);const amt=nums?parseInt(nums[0].replace(/[.,]/g,"")):0;
+  const row=document.createElement("div");row.style.cssText="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--line);";
+  row.innerHTML=`<div style="width:36px;height:36px;background:var(--edim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">💳</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">${n.value}</div><div style="font-size:11px;color:var(--t3);">Variable</div></div><div style="font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;">$${amt.toLocaleString("es-CL")}</div><span onclick="this.closest('div').parentElement.remove();mpRecalc()" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>`;
+  document.getElementById("mp-vars-list").appendChild(row);mpRecalc();n.value="";m.value="";
+}
+
+function mpRecalc(){
+  let f=0,v=0;
+  document.querySelectorAll("#mp-fijos-list div[style*='JetBrains']").forEach(el=>f+=parseInt(el.textContent.replace(/[^0-9]/g,"")||0));
+  document.querySelectorAll("#mp-vars-list div[style*='JetBrains']").forEach(el=>v+=parseInt(el.textContent.replace(/[^0-9]/g,"")||0));
+  mpData.fijos=f;mpData.vars=v;
+  const ft=document.getElementById("mp-total-fijos"),vt=document.getElementById("mp-total-vars");
+  if(ft)ft.textContent="$"+f.toLocaleString("es-CL");if(vt)vt.textContent="$"+v.toLocaleString("es-CL");
+}
+
+function mpAhorroUpdate(){
+  const inp=document.getElementById("mp-ahorro");
+  const nums=inp.value.match(/\d[\d.,]*/g);const amt=nums?parseInt(nums[0].replace(/[.,]/g,"")):0;
+  mpData.ahorro=amt;
+  const pct=mpData.ingresos>0?Math.round(amt/mpData.ingresos*100):0;
+  const pe=document.getElementById("mp-ahorro-pct"),ba=document.getElementById("mp-ahorro-bar");
+  if(pe)pe.textContent=pct+"%";if(ba)ba.style.width=Math.min(pct*(100/30),100)+"%";
+}
+
+function mpRecalcDash(){
+  const ing=mpData.ingresos,f=mpData.fijos,v=mpData.vars,a=mpData.ahorro;
+  const disp=Math.max(0,ing-f-v-a);
+  const fmt=n=>"$"+n.toLocaleString("es-CL");
+  const pct=n=>Math.round(n/ing*100);
+  const ids={"mp-hero-disp":fmt(disp),"mp-hero-ing":"de "+fmt(ing),"mp-hero-pct":pct(disp)+"% del ingreso disponible","mp-dd-ing":fmt(ing),"mp-dd-fijos":fmt(f),"mp-dd-vars":fmt(v),"mp-dd-ahorro":fmt(a),"mp-dd-disp":fmt(disp),"mp-pct-f":pct(f)+"%","mp-pct-v":pct(v)+"%","mp-pct-a":pct(a)+"%","mp-pct-d":pct(disp)+"%"};
+  Object.entries(ids).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+  const bars={"mp-bar-f":pct(f),"mp-bar-v":pct(v),"mp-bar-a":pct(a),"mp-bar-d":pct(disp)};
+  Object.entries(bars).forEach(([id,w])=>{const el=document.getElementById(id);if(el)el.style.width=Math.min(w,100)+"%";});
+  const hbar=document.getElementById("mp-hero-bar");if(hbar)hbar.style.width=Math.min(pct(disp),100)+"%";
+  if(a===0){const row=document.getElementById("mp-ahorro-row");if(row)row.style.display="none";const dist=document.getElementById("mp-ahorro-dist");if(dist)dist.style.display="none";}
+  const nombre=document.getElementById("ob-nombre")?.value||"";const fn=nombre?nombre.split(" ")[0]:"";
+  const greet=document.getElementById("mp-dash-greeting");
+  if(greet)greet.textContent="Abril 2026 · "+(fn?"Hola "+fn+", aquí tu resumen":"Tu situación financiera");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const pi=document.getElementById("pinput");if(pi)pi.addEventListener("keydown",e=>{if(e.key==="Enter")addProd();});
+  const mi=document.getElementById("minput");if(mi)mi.addEventListener("keydown",e=>{if(e.key==="Enter")addMed();});
+  const ri=document.getElementById("rinput");if(ri)ri.addEventListener("keydown",e=>{if(e.key==="Enter")usarBusqueda("retail");});
+});
+</script>
+</body>
+</html>
