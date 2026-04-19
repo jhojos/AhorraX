@@ -467,10 +467,12 @@ input,select{max-width:100%;box-sizing:border-box;}
         <div class="lbl" id="mp-ingreso-label">Ingreso principal</div>
         <input class="dp dp-lg" id="mp-ingreso" type="text" placeholder="Ej: $ 1.200.000" style="width:100%;margin-bottom:16px;" oninput="mpRecalc()"/>
         <div class="lbl">¿Tienes otros ingresos este mes?</div>
-        <div class="inrow">
-          <input type="text" id="mp-otro-n" placeholder="Ej: Proyecto freelance"/>
-          <input type="text" id="mp-otro-m" placeholder="$ monto" style="max-width:130px;"/>
-          <button class="addbtn" onclick="mpAddOtroIng()">+</button>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+          <div style="display:flex;gap:7px;">
+            <input type="text" id="mp-otro-n" placeholder="Ej: Proyecto freelance" style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+            <input type="text" id="mp-otro-m" placeholder="$ monto" style="width:110px;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+          </div>
+          <button class="addbtn" onclick="mpAddOtroIng()" style="width:100%;padding:10px;">+ Agregar ingreso</button>
         </div>
         <div id="mp-otros-ing"></div>
         <div style="background:var(--edim);border-radius:var(--rs);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;border:.5px solid rgba(45,142,255,.2);">
@@ -490,10 +492,12 @@ input,select{max-width:100%;box-sizing:border-box;}
         </div>
         <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Gastos fijos mensuales</p>
         <p class="sub">Los que pagas todos los meses — arriendo, servicios, suscripciones.</p>
-        <div class="inrow">
-          <input type="text" id="mp-gf-n" placeholder="Ej: Arriendo, Netflix..."/>
-          <input type="text" id="mp-gf-m" placeholder="$ monto" style="max-width:120px;"/>
-          <button class="addbtn" onclick="mpAddFijo()">+</button>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+          <div style="display:flex;gap:7px;">
+            <input type="text" id="mp-gf-n" placeholder="Ej: Arriendo, Netflix..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+            <input type="text" id="mp-gf-m" placeholder="$ monto" style="width:110px;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+          </div>
+          <button class="addbtn" onclick="mpAddFijo()" style="width:100%;padding:10px;">+ Agregar gasto fijo</button>
         </div>
         <div id="mp-fijos-list">
           <div id="mp-fijos-empty" style="text-align:center;padding:20px 0;">
@@ -521,10 +525,12 @@ input,select{max-width:100%;box-sizing:border-box;}
         </div>
         <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Gastos variables del mes</p>
         <p class="sub">Los que cambian cada mes — comida, transporte, salidas. Puedes seguir agregándolos con el botón flotante.</p>
-        <div class="inrow">
-          <input type="text" id="mp-gv-n" placeholder="Ej: Almuerzo, Uber..."/>
-          <input type="text" id="mp-gv-m" placeholder="$ monto" style="max-width:120px;"/>
-          <button class="addbtn" onclick="mpAddVar()">+</button>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+          <div style="display:flex;gap:7px;">
+            <input type="text" id="mp-gv-n" placeholder="Ej: Almuerzo, Uber..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+            <input type="text" id="mp-gv-m" placeholder="$ monto" style="width:110px;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+          </div>
+          <button class="addbtn" onclick="mpAddVar()" style="width:100%;padding:10px;">+ Agregar gasto variable</button>
         </div>
         <div id="mp-vars-list">
           <div id="mp-vars-empty" style="text-align:center;padding:20px 0;">
@@ -803,10 +809,12 @@ input,select{max-width:100%;box-sizing:border-box;}
     <div class="card">
       <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Tu lista de compras</p>
       <p class="sub">Agrega los productos que quieres comparar.</p>
-      <div class="inrow">
-        <input type="text" id="pinput" placeholder="Ej: Leche 1L, Arroz..."/>
-        <select id="pqty"><option>x1</option><option selected>x2</option><option>x3</option></select>
-        <button class="addbtn" onclick="addProd()">+</button>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+        <div style="display:flex;gap:7px;">
+          <input type="text" id="pinput" placeholder="Ej: Leche 1L, Arroz..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+          <select id="pqty" style="background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px;font-size:13px;color:var(--t1);outline:none;"><option>x1</option><option selected>x2</option><option>x3</option></select>
+        </div>
+        <button class="addbtn" onclick="addProd()" style="width:100%;padding:10px;">+ Agregar producto</button>
       </div>
       <div id="plist"></div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line);">
@@ -892,7 +900,10 @@ input,select{max-width:100%;box-sizing:border-box;}
     <div class="card">
       <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Tus medicamentos</p>
       <p class="sub">Agrega los remedios que compras regularmente.</p>
-      <div class="inrow"><input type="text" id="minput" placeholder="Ej: Omeprazol 20mg..."/><button class="addbtn" onclick="addMed()">+ Agregar</button></div>
+      <div style="display:flex;gap:7px;margin-bottom:10px;">
+        <input type="text" id="minput" placeholder="Ej: Omeprazol 20mg..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+        <button class="addbtn" onclick="addMed()" style="white-space:nowrap;">+ Agregar</button>
+      </div>
       <div id="mlist"></div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:.5px solid var(--line);">
         <span style="font-size:12px;color:var(--t3);white-space:nowrap;">Tu comuna:</span>
@@ -938,7 +949,10 @@ input,select{max-width:100%;box-sizing:border-box;}
     <div class="card">
       <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">¿Qué quieres buscar?</p>
       <p class="sub">AhorraX compara en Falabella, Ripley, Paris, Mercado Libre y más.</p>
-      <div class="inrow"><input type="text" id="rinput" placeholder="Ej: iPhone 16, lavadora..."/><button class="addbtn" onclick="usarBusqueda('retail')">Buscar →</button></div>
+      <div style="display:flex;gap:7px;margin-bottom:10px;">
+        <input type="text" id="rinput" placeholder="Ej: iPhone 16, lavadora..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
+        <button class="addbtn" onclick="usarBusqueda('retail')" style="white-space:nowrap;">Buscar →</button>
+      </div>
       <div class="lbl" style="margin-top:8px;">O elige una categoría</div>
       <div id="ret-cats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
         <div onclick="selRCat(this)" style="border:1px solid var(--blue);background:var(--edim);border-radius:var(--rs);padding:11px 8px;text-align:center;cursor:pointer;"><div style="font-size:10px;font-weight:700;color:var(--b2);">Tecnología</div></div>
