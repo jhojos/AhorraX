@@ -54,6 +54,7 @@ body{font-family:"Sora",sans-serif;background:var(--bg);color:var(--t1);display:
 .qtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .qtag{font-size:12px;font-weight:600;padding:6px 11px;border-radius:99px;border:.5px solid var(--line2);cursor:pointer;background:var(--frost);color:var(--t2);}
 .qtag:active{background:var(--edim);color:var(--b2);}
+.qtag.on{background:var(--edim);border-color:var(--blue);color:var(--b2);}
 /* LAYOUT */
 .wrap{width:100%;max-width:480px;padding:14px 14px 100px;}
 .screen{display:none;flex-direction:column;gap:12px;animation:fu .22s ease both;}
@@ -173,33 +174,31 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       </div>
     </div>
     <!-- MODO ESCRITURA -->
+        <!-- MODO ESCRITURA simplificado -->
     <div id="drawer-escritura" style="display:none;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
         <button onclick="drawerModo('inicio')" style="background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:18px;padding:0;">←</button>
         <p style="font-size:16px;font-weight:700;color:var(--t1);">Registrar gasto</p>
       </div>
-      <div class="lbl">Monto</div>
-      <input class="g-inp" id="gasto-monto" type="text" placeholder="Ej: $ 8.500" oninput="mostrarContextoUF()"/>
+      <input class="g-inp" id="gasto-monto" type="text" placeholder="$ Monto" oninput="mostrarContextoUF()" autocomplete="off" style="font-size:22px;font-weight:700;letter-spacing:-.5px;padding:14px;margin-bottom:4px;"/>
       <div id="gasto-uf-ctx" style="display:none;font-size:11px;color:var(--b2);margin-bottom:8px;padding:0 2px;"></div>
-      <div class="lbl" style="margin-bottom:5px;">Descripción</div>
-      <input class="g-inp" id="gasto-desc" type="text" placeholder="Ej: Almuerzo, Arriendo, Farmacia..." oninput="acSugerir()" autocomplete="off"/>
-      <div id="ac-sugerencias" style="display:none;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);margin-top:-6px;margin-bottom:8px;overflow:hidden;"></div>
-      <div class="lbl">Tipo de gasto</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
-        <div id="tipo-variable" class="ppill on" onclick="selTipo('variable')"><div style="font-size:12px;font-weight:700;">Variable</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">Del día a día</div></div>
-        <div id="tipo-fijo" class="ppill" onclick="selTipo('fijo')"><div style="font-size:12px;font-weight:700;">Fijo</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">Mensual</div></div>
+      <input class="g-inp" id="gasto-desc" type="text" placeholder="Descripción (ej: Almuerzo, Uber...)" oninput="acSugerir()" autocomplete="off" style="margin-bottom:4px;"/>
+      <div id="ac-sugerencias" style="display:none;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;"></div>
+      <div style="display:flex;gap:7px;margin-bottom:10px;">
+        <div id="tipo-variable" class="ppill on" onclick="selTipo('variable')" style="flex:1;padding:8px;font-size:12px;font-weight:700;cursor:pointer;">💳 Variable</div>
+        <div id="tipo-fijo" class="ppill" onclick="selTipo('fijo')" style="flex:1;padding:8px;font-size:12px;font-weight:700;cursor:pointer;">📌 Fijo</div>
       </div>
-      <div class="lbl">Categoría</div>
-      <div class="qtags" style="margin-bottom:14px;">
-        <div class="qtag" onclick="selCat(this,'🍽','Alimentación')">🍽 Comida</div>
-        <div class="qtag" onclick="selCat(this,'🚗','Transporte')">🚗 Transporte</div>
-        <div class="qtag" onclick="selCat(this,'🛒','Supermercado')">🛒 Super</div>
-        <div class="qtag" onclick="selCat(this,'☕','Café')">☕ Café</div>
-        <div class="qtag" onclick="selCat(this,'💊','Farmacia')">💊 Farmacia</div>
-        <div class="qtag" onclick="selCat(this,'📺','Entretención')">📺 Ocio</div>
-        <div class="qtag" onclick="selCat(this,'💳','Otro')">💳 Otro</div>
+      <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+        <div class="qtag" onclick="selCat(this,'🍽','Alimentación')">🍽</div>
+        <div class="qtag" onclick="selCat(this,'🚗','Transporte')">🚗</div>
+        <div class="qtag" onclick="selCat(this,'🛒','Supermercado')">🛒</div>
+        <div class="qtag" onclick="selCat(this,'☕','Café')">☕</div>
+        <div class="qtag" onclick="selCat(this,'💊','Farmacia')">💊</div>
+        <div class="qtag" onclick="selCat(this,'📺','Ocio')">📺</div>
+        <div class="qtag" onclick="selCat(this,'🏠','Hogar')">🏠</div>
+        <div class="qtag on" onclick="selCat(this,'💳','Otro')">💳</div>
       </div>
-      <button class="btn b-blue" onclick="guardarGasto()">Guardar gasto →</button>
+      <button class="btn b-blue" onclick="guardarGasto()" style="font-size:15px;padding:15px;">Guardar →</button>
     </div>
     <!-- MODO VOZ -->
     <div id="drawer-voz" style="display:none;">
@@ -257,7 +256,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     <span id="plan-badge" class="badge-basic">Básico</span>
     <span id="perfil-badge" style="display:none;font-size:10px;font-weight:700;background:var(--frost2);color:var(--t3);padding:3px 9px;border-radius:99px;border:.5px solid var(--line2);text-transform:capitalize;"></span>
     <button class="btn-inicio" onclick="resetApp()">Inicio</button>
-    <button id="btn-dev-reset" onclick="limpiarDatos()" style="font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border:.5px solid var(--line);border-radius:99px;background:transparent;font-family:'Sora',sans-serif;display:none;" title="Limpiar datos de prueba">⟳</button>
+    <button id="btn-dev-reset" onclick="limpiarDatos()" style="font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border:.5px solid var(--line);border-radius:99px;background:transparent;font-family:'Sora',sans-serif;" title="Limpiar datos de prueba">⟳</button>
   </div>
 </div>
 
@@ -280,6 +279,9 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     <span>Plan</span>
   </div>
 </nav>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1C2B3A;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;z-index:500;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4);border:.5px solid rgba(255,255,255,.1);"><span id="toast-msg">✓ Guardado</span></div>
 
 <div class="wrap">
 <!-- ══ ONBOARDING ══ -->
@@ -376,7 +378,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
         <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">¿Cuánto ganaste este mes?</p>
         <p class="sub">Ingresa todos tus ingresos — sueldo, honorarios, arriendos u otros.</p>
         <div class="lbl" id="mp-ingreso-label">Ingreso principal</div>
-        <input class="dp dp-lg" id="mp-ingreso" type="text" placeholder="Ej: $ 1.200.000" style="width:100%;margin-bottom:14px;" oninput="mpRecalc()"/>
+        <input class="dp dp-lg" id="mp-ingreso" type="text" placeholder="Ej: $ 1.200.000" style="width:100%;margin-bottom:14px;" oninput="mpRecalc()" onblur="fmtInput(this)"/>
         <div class="lbl">¿Tienes otros ingresos este mes?</div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
           <div style="display:flex;gap:7px;">
@@ -465,7 +467,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
         <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Meta de ahorro mensual</p>
         <p class="sub">¿Cuánto quieres reservar este mes? No es obligatorio.</p>
         <div class="lbl">Monto a reservar</div>
-        <input class="dp dp-lg" id="mp-ahorro" type="text" placeholder="Ej: $ 100.000" style="width:100%;margin-bottom:14px;" oninput="mpAhorroUpdate()"/>
+        <input class="dp dp-lg" id="mp-ahorro" type="text" placeholder="Ej: $ 100.000" style="width:100%;margin-bottom:14px;" oninput="mpAhorroUpdate()" onblur="fmtInput(this)"/>
         <div style="background:var(--gdim);border-radius:var(--rs);padding:13px;border:.5px solid rgba(0,196,122,.2);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <span style="font-size:13px;font-weight:600;color:var(--green);">% de tu ingreso</span>
@@ -507,6 +509,10 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
             <p id="mp-dash-greeting" style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;">Abril 2026 · Tu situación</p>
             <p id="mp-hero-disp" style="font-size:36px;font-weight:800;color:var(--v2);letter-spacing:-1.5px;line-height:1;margin-bottom:5px;">$0</p>
             <p style="font-size:12px;color:var(--t3);">disponible real este mes</p>
+          <!-- Estado vacío: guía cuando no hay datos -->
+          <div id="hero-empty-guide" style="display:none;margin-top:10px;background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px;border:.5px solid rgba(255,255,255,.1);">
+            <p style="font-size:12px;color:var(--t2);line-height:1.6;">👆 Vuelve al paso 1 e ingresa tus ingresos y gastos para ver tu situación real aquí.</p>
+          </div>
           <div id="hero-proy-wrap" style="display:none;margin-top:6px;background:rgba(139,92,246,.12);border-radius:6px;padding:6px 10px;border:.5px solid rgba(139,92,246,.2);">
             <span style="font-size:10px;color:var(--t3);">Proyectado con agenda: </span>
             <span id="hero-proy-num" style="font-size:12px;font-weight:700;color:var(--v2);"></span>
@@ -575,7 +581,12 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       <div class="card">
         <div class="lbl">Alertas e insights</div>
         <div id="dash-insights-list">
-          <p style="font-size:13px;color:var(--t3);padding:10px 0;line-height:1.6;">Los insights se generan automáticamente cuando ingresas ingresos y gastos. Completa los pasos anteriores para verlos.</p>
+          <div style="text-align:center;padding:14px 0;">
+            <div style="font-size:28px;margin-bottom:8px;">🔍</div>
+            <p style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px;">Sin datos aún</p>
+            <p style="font-size:12px;color:var(--t3);line-height:1.6;">Regresa al paso 1 e ingresa tus ingresos<br>y gastos para ver tus insights.</p>
+            <button onclick="mpGoStep(1)" style="margin-top:10px;padding:8px 16px;border-radius:99px;border:.5px solid var(--line2);background:transparent;color:var(--b2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;">← Ir al paso 1</button>
+          </div>
         </div>
         <button onclick="tab('analisis')" style="width:100%;margin-top:10px;padding:10px;border-radius:var(--rs);border:.5px solid var(--line2);background:transparent;color:var(--b2);font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;">
           Ver análisis completo
@@ -800,69 +811,68 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
 
   <!-- Modal: Agregar compromiso -->
   <div id="ag-modal-ov" style="display:none;position:fixed;inset:0;background:rgba(8,12,20,.8);z-index:300;align-items:flex-end;justify-content:center;overflow-y:auto;">
-    <div style="width:100%;max-width:480px;background:var(--navy);border-radius:22px 22px 0 0;padding:18px 16px 36px;border-top:.5px solid var(--line2);animation:su .22s ease;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-      <div style="width:36px;height:4px;background:var(--frost3);border-radius:99px;margin:0 auto 20px;"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="width:100%;max-width:480px;background:var(--navy);border-radius:22px 22px 0 0;padding:16px 16px 36px;border-top:.5px solid var(--line2);animation:su .22s ease;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div style="width:36px;height:4px;background:var(--frost3);border-radius:99px;margin:0 auto 16px;"></div>
+
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <p style="font-size:16px;font-weight:700;color:var(--t1);">Nuevo compromiso</p>
-        <button onclick="cerrarFormAgenda()" style="background:transparent;border:none;color:var(--t3);font-size:22px;cursor:pointer;padding:0;">×</button>
+        <button onclick="cerrarFormAgenda()" style="background:transparent;border:none;color:var(--t3);font-size:22px;cursor:pointer;padding:0;line-height:1;">×</button>
       </div>
 
-      <!-- Tipo principal -->
-      <div class="lbl" style="margin-bottom:5px;">¿Es un pago o un cobro?</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
-        <div id="ag-tipo-pagar" class="ppill on" onclick="agSelTipo('pagar')" style="cursor:pointer;">
+      <!-- PASO 1: Tipo (pagar/cobrar) — compacto arriba -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;">
+        <div id="ag-tipo-pagar" class="ppill on" onclick="agSelTipo('pagar')" style="cursor:pointer;padding:9px 8px;">
           <div style="font-size:12px;font-weight:700;">💸 Por pagar</div>
-          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Arriendo, crédito, servicio...</div>
         </div>
-        <div id="ag-tipo-cobrar" class="ppill" onclick="agSelTipo('cobrar')" style="cursor:pointer;">
+        <div id="ag-tipo-cobrar" class="ppill" onclick="agSelTipo('cobrar')" style="cursor:pointer;padding:9px 8px;">
           <div style="font-size:12px;font-weight:700;">💰 Por cobrar</div>
-          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Sueldo, honorarios, deuda...</div>
         </div>
-      </div>
-      <!-- Subtipo: fijo vs variable (solo para "por pagar") -->
-      <div id="ag-subtipo-wrap" style="margin-bottom:10px;">
-        <div class="lbl" style="margin-bottom:5px;">¿Cómo clasificar al pagar?</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
-          <div id="ag-subtipo-fijo" class="ppill on" onclick="agSelSubtipo('fijo')" style="cursor:pointer;">
-            <div style="font-size:12px;font-weight:700;">📌 Gasto fijo</div>
-            <div style="font-size:10px;color:var(--t3);margin-top:2px;">Se repite cada mes</div>
-          </div>
-          <div id="ag-subtipo-variable" class="ppill" onclick="agSelSubtipo('variable')" style="cursor:pointer;">
-            <div style="font-size:12px;font-weight:700;">💳 Gasto variable</div>
-            <div style="font-size:10px;color:var(--t3);margin-top:2px;">Pago puntual</div>
-          </div>
-        </div>
-        <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;">Al marcarlo como pagado, se registrará automáticamente en tu dashboard.</p>
       </div>
 
-      <!-- Nombre -->
-      <div class="lbl" style="margin-bottom:5px;">Descripción</div>
-      <div style="display:flex;gap:7px;margin-bottom:6px;">
-        <input class="g-inp" id="ag-inp-nombre" type="text" placeholder="Ej: Arriendo, Sueldo de mayo..." style="padding:11px 14px;margin-bottom:0;flex:1;"/>
+      <!-- PASO 2: Descripción con voz -->
+      <div style="display:flex;gap:7px;margin-bottom:8px;">
+        <input class="g-inp" id="ag-inp-nombre" type="text" placeholder="Ej: Arriendo, Sueldo de mayo..." style="padding:11px 13px;margin-bottom:0;flex:1;"/>
         <button id="ag-voz-btn" onclick="agIniciarVoz()" title="Dictar" style="width:44px;height:44px;flex-shrink:0;border-radius:var(--rs);background:var(--navy2);border:.5px solid var(--line2);cursor:pointer;display:flex;align-items:center;justify-content:center;">
           <svg width="18" height="18" viewBox="0 0 30 30" fill="none"><rect x="10" y="3" width="10" height="16" rx="5" fill="var(--b2)"/><path d="M5 15a10 10 0 0020 0" stroke="var(--b2)" stroke-width="2" stroke-linecap="round"/><line x1="15" y1="25" x2="15" y2="29" stroke="var(--b2)" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
       </div>
-      <div id="ag-voz-estado" style="display:none;font-size:11px;padding:7px 10px;border-radius:6px;margin-bottom:6px;"></div>
+      <div id="ag-voz-estado" style="display:none;font-size:11px;padding:7px 10px;border-radius:6px;margin-bottom:8px;"></div>
 
-      <!-- Monto -->
-      <div class="lbl" style="margin-bottom:5px;">Monto</div>
-      <input class="g-inp" id="ag-inp-monto" type="text" placeholder="Ej: $ 350.000" style="padding:11px 14px;margin-bottom:6px;"/>
-
-      <!-- Fecha -->
-      <div class="lbl" style="margin-bottom:5px;">Fecha de vencimiento / cobro</div>
-      <input class="g-inp" id="ag-inp-fecha" type="date" style="color:var(--t1);padding:11px 14px;margin-bottom:6px;"/>
-
-      <!-- Recurrente -->
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--navy2);border-radius:var(--rs);border:.5px solid var(--line2);">
-        <input type="checkbox" id="ag-recurrente" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;"/>
+      <!-- PASO 3: Monto y Fecha en fila -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
         <div>
-          <label for="ag-recurrente" style="font-size:13px;font-weight:600;color:var(--t1);cursor:pointer;">Compromiso mensual recurrente</label>
-          <div style="font-size:11px;color:var(--t3);margin-top:1px;">Se repite cada mes en la misma fecha</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px;">Monto</div>
+          <input class="g-inp" id="ag-inp-monto" type="text" placeholder="$ 0" style="padding:11px 13px;margin-bottom:0;"/>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px;">Fecha</div>
+          <input class="g-inp" id="ag-inp-fecha" type="date" style="color:var(--t1);padding:11px 10px;margin-bottom:0;"/>
         </div>
       </div>
 
-      <button class="btn b-blue" onclick="agGuardar()">Guardar compromiso →</button>
+      <!-- PASO 4: Clasificación (solo para "por pagar") -->
+      <div id="ag-subtipo-wrap" style="margin-bottom:12px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:6px;">Clasificar al pagar como</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+          <div id="ag-subtipo-fijo" class="ppill on" onclick="agSelSubtipo('fijo')" style="cursor:pointer;padding:8px;">
+            <div style="font-size:11px;font-weight:700;">📌 Gasto fijo</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:1px;">Se repite cada mes</div>
+          </div>
+          <div id="ag-subtipo-variable" class="ppill" onclick="agSelSubtipo('variable')" style="cursor:pointer;padding:8px;">
+            <div style="font-size:11px;font-weight:700;">💳 Variable</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:1px;">Pago puntual</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 5: Recurrente -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 12px;background:var(--navy2);border-radius:var(--rs);border:.5px solid var(--line2);">
+        <input type="checkbox" id="ag-recurrente" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;"/>
+        <label for="ag-recurrente" style="font-size:12px;font-weight:600;color:var(--t1);cursor:pointer;line-height:1.4;">Mensual recurrente<br><span style="font-size:10px;color:var(--t3);font-weight:400;">Se repite cada mes en la misma fecha</span></label>
+      </div>
+
+      <button class="btn b-blue" onclick="agGuardar()" style="font-size:14px;padding:14px;">Guardar compromiso →</button>
     </div>
   </div>
 
@@ -932,6 +942,11 @@ var recognition = null;
 
 // ══ HELPERS ══
 function g(id){return document.getElementById(id);}
+function fmtInput(el){
+  // Formatea el input al perder foco: 5500000 → $ 5.500.000
+  var v=pa(el.value);
+  if(v>0)el.value='$ '+v.toLocaleString('es-CL');
+}
 function fechaCorta(){
   var d=new Date();
   var dd=String(d.getDate()).padStart(2,'0');
@@ -1021,11 +1036,19 @@ function enterApp(withAccount){
     aplicarPerfil(perfilActivo);
     // Mostrar badge de perfil
     var pb=g('perfil-badge');if(pb){pb.style.display='';pb.textContent=perfilActivo;}
+    // Scroll al tope ANTES de mostrar el paso 1 — evita ver el formulario antes que la bienvenida
+    window.scrollTo({top:0,behavior:'instant'});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
     setTimeout(function(){
       mpGoStep(1);
-      // Scroll al tope después de la animación de entrada
-      setTimeout(function(){window.scrollTo({top:0,behavior:'instant'});},50);
-    },100);
+      // Segundo scroll por si la animación movió el viewport
+      requestAnimationFrame(function(){
+        window.scrollTo({top:0,behavior:'instant'});
+        document.documentElement.scrollTop=0;
+        document.body.scrollTop=0;
+      });
+    },80);
   } else {
     if(badge){badge.textContent='Básico';badge.className='badge-basic';}
     hide('mimes-pro');show('mimes-basico');
@@ -1125,8 +1148,8 @@ window.selTipoVoz=selTipoVoz;
 
 function selCat(el,emoji,nombre){
   var d=g('drawer-escritura');
-  if(d)d.querySelectorAll('.qtag').forEach(function(q){q.style.background='var(--frost)';q.style.borderColor='var(--line2)';q.style.color='var(--t2)';});
-  el.style.background='var(--edim)';el.style.borderColor='var(--blue)';el.style.color='var(--b2)';
+  if(d)d.querySelectorAll('.qtag').forEach(function(q){q.classList.remove('on');});
+  el.classList.add('on');
   gastoCatEmoji=emoji;gastoCatNombre=nombre;
 }
 window.selCat=selCat;
@@ -1175,6 +1198,7 @@ function guardarGasto(){
   if(!desc){alert('Ingresa una descripción.');return;}
   selTipo(gastoTipo);
   if(registrarGasto(monto,desc,gastoTipo,gastoCatEmoji,gastoCatNombre)){
+    toast('✓ Gasto registrado');
     setTimeout(function(){var ov=g('drawer-ov');if(ov)ov.classList.remove('on');var gl=g('gasto-list');if(gl)gl.innerHTML='';},400);
   }
 }
@@ -1223,6 +1247,7 @@ function confirmarVoz(){
   if(!desc){alert('Ingresa una descripción.');return;}
   var emoji=vozTipo==='fijo'?'📌':'💳';
   if(registrarGasto(monto,desc,vozTipo,emoji,'Otro')){
+    toast('✓ Gasto registrado por voz');
     setTimeout(function(){var ov=g('drawer-ov');if(ov)ov.classList.remove('on');var gl=g('gasto-list');if(gl)gl.innerHTML='';hide('voz-confirmar');show('voz-ready');},400);
   }
 }
@@ -1325,8 +1350,11 @@ function mpGoStep(n){
   if(n===2){var ic=g('mp-ing-confirm');if(ic)ic.textContent='Ingresos registrados: '+fmt(mpData.ingresos);}
   if(n===5){mpRecalcDash();renderInsights();cargarIndicadores();}
   // Scroll instantáneo al paso 1 (bienvenida), suave en los demás
-  if(n===1)window.scrollTo({top:0,behavior:'instant'});
-  else goTop();
+  if(n===1){
+    window.scrollTo({top:0,behavior:'instant'});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+  } else goTop();
 }
 window.mpGoStep=mpGoStep;
 
@@ -1401,6 +1429,10 @@ function mpRecalcDash(){
   function setArc(id,dash,offset){var e=g(id);if(e){e.setAttribute('stroke-dasharray',dash.toFixed(1)+' '+C);e.setAttribute('stroke-dashoffset',offset.toFixed(1));}}
   setArc('donut-d',pD,oD);setArc('donut-f',pF,oF);setArc('donut-v',pV,oV);setArc('donut-a',pA,oA);
   var dc=g('donut-center');if(dc){dc.textContent=isDeficit?'!':p(disp)+'%';dc.style.fill=isDeficit?'#FF5A5A':'#A78BFA';}
+  // Mostrar guía si no hay datos
+  var emptyGuide=g('hero-empty-guide');
+  if(emptyGuide)emptyGuide.style.display=(ing===0)?'':'none';
+
   // Greeting
   var inp=g('ob-nombre'),nombre=inp?inp.value.trim():'',fn=nombre?nombre.split(' ')[0]:'';
   txt('mp-dash-greeting','Abril 2026 · '+(fn?'Hola '+fn+', tu resumen':'Tu situación financiera'));
@@ -2439,6 +2471,7 @@ function agGuardar(){
   if(!monto){alert('Ingresa un monto válido.');return;}
   if(!fechaVal){alert('Selecciona una fecha.');return;}
   AgendaService.agregar({nombre:nombre,monto:monto,fecha:fechaVal,tipo:agTipoActual,subtipo:agTipoActual==='pagar'?agSubtipoActual:'cobrar',recurrente:recurrente});
+  toast('✓ Compromiso guardado');
   cerrarFormAgenda();
   renderAgenda();
   actualizarProyeccion();
@@ -2457,6 +2490,7 @@ function agPagar(id){
     var emoji=tipoGasto==='fijo'?'📌':'💸';
     registrarGasto(item.monto,item.nombre,tipoGasto,emoji,'Compromiso');
   }
+  toast(item.tipo==='pagar'?'✓ Marcado como pagado':'✓ Marcado como cobrado');
   renderAgenda();
   actualizarProyeccion();
   actualizarDashboardAgenda();
@@ -2752,6 +2786,28 @@ function agProcesarVoz(transcript){
   }
 }
 window.agProcesarVoz=agProcesarVoz;
+
+
+// ════════════════════════════════════════
+// TOAST — confirmación visual instantánea
+// ════════════════════════════════════════
+var _toastTimer=null;
+function toast(msg,tipo){
+  var t=g('toast');var m=g('toast-msg');
+  if(!t||!m)return;
+  m.textContent=msg||'✓ Guardado';
+  // Color según tipo
+  var bg={'ok':'#1C2B3A','error':'#C0392B','info':'#1A3A5C'};
+  t.style.background=bg[tipo||'ok']||bg.ok;
+  t.style.opacity='1';
+  t.style.transform='translateX(-50%) translateY(0)';
+  if(_toastTimer)clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(function(){
+    t.style.opacity='0';
+    t.style.transform='translateX(-50%) translateY(20px)';
+  },2000);
+}
+window.toast=toast;
 
 // ══ INIT ══
 document.addEventListener('DOMContentLoaded',function(){
