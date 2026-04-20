@@ -587,6 +587,12 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="3" y="1" width="10" height="13" rx="2" stroke="white" stroke-width="1.3"/><path d="M6 5h4M6 8h4M6 11h2" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
           Exportar resumen (PDF)
         </button>
+        <div id="btn-sii-dash" style="display:none;margin-top:0;">
+          <button onclick="exportSII()" class="btn b-out" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 12l4-8 4 8M4.5 9h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+            Reporte SII para contador
+          </button>
+        </div>
         <div class="flex-btns">
           <button class="btn b-out" onclick="mpGoStep(4)" style="flex:1;">← Volver</button>
           <button class="btn b-out" onclick="mpGoStep(1)" style="flex:2;">Editar información</button>
@@ -616,6 +622,10 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
           <input type="text" id="bas-desc" placeholder="Descripción" style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
           <input type="text" id="bas-monto" placeholder="$ monto" style="width:110px;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+          <div id="bas-tipo-fijo" class="ppill" onclick="basSelTipo('fijo')" style="cursor:pointer;font-size:11px;">Fijo</div>
+          <div id="bas-tipo-variable" class="ppill on" onclick="basSelTipo('variable')" style="cursor:pointer;font-size:11px;">Variable</div>
+        </div>
         <div style="display:flex;gap:8px;">
           <button onclick="basAgregar('ingreso')" class="btn b-ghost" style="flex:1;margin-top:0;padding:10px;font-size:12px;">+ Ingreso</button>
           <button onclick="basAgregar('gasto')" class="btn b-ghost" style="flex:1;margin-top:0;padding:10px;font-size:12px;">+ Gasto</button>
@@ -632,6 +642,10 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
 <div class="screen" id="sc-analisis">
   <!-- Básico ve esto -->
   <div id="analisis-basico-msg" style="display:none;">
+    <button onclick="tab('mimes')" style="display:flex;align-items:center;gap:6px;background:transparent;border:.5px solid var(--line2);border-radius:99px;padding:7px 14px;cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--t3);margin-bottom:4px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Mi Mes
+    </button>
     <div class="card-grad">
       <p style="font-size:16px;font-weight:700;color:var(--b2);margin-bottom:8px;">Análisis disponible en Pro</p>
       <p style="font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:14px;">El plan básico te muestra tu disponible real. Con Pro obtienes el análisis completo: insights automáticos, detección de patrones, comparación con meses anteriores y alertas inteligentes.</p>
@@ -641,6 +655,11 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
 
   <!-- Pro ve esto -->
   <div id="analisis-pro-content" style="display:none;">
+    <!-- Botón volver -->
+    <button onclick="tab('mimes')" style="display:flex;align-items:center;gap:6px;background:transparent;border:.5px solid var(--line2);border-radius:99px;padding:7px 14px;cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--t3);margin-bottom:4px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Mi Mes
+    </button>
     <!-- Resumen -->
     <div class="card">
       <div class="lbl">Resumen del mes</div>
@@ -703,6 +722,17 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       <button onclick="exportPDF()" class="btn b-blue" style="display:flex;align-items:center;justify-content:center;gap:8px;">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="3" y="1" width="10" height="13" rx="2" stroke="white" stroke-width="1.3"/><path d="M6 5h4M6 8h4M6 11h2" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
         Exportar análisis completo (PDF)
+      </button>
+      <div id="btn-sii-wrap" style="display:none;margin-top:8px;">
+        <button onclick="exportSII()" class="btn b-out" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 12l4-8 4 8M4.5 9h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+          Reporte orientativo SII para contador
+        </button>
+        <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:8px;line-height:1.5;">Solo para Emprendedor y Freelancer · Documento orientativo</p>
+      </div>
+      <button onclick="tab('mimes')" class="btn b-out" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Volver a Mi Mes
       </button>
     </div>
   </div>
@@ -772,6 +802,30 @@ var recognition = null;
 
 // ══ HELPERS ══
 function g(id){return document.getElementById(id);}
+function fechaCorta(){
+  var d=new Date();
+  var dd=String(d.getDate()).padStart(2,'0');
+  var mm=String(d.getMonth()+1).padStart(2,'0');
+  var hh=String(d.getHours()).padStart(2,'0');
+  var min=String(d.getMinutes()).padStart(2,'0');
+  return dd+'/'+mm+' '+hh+':'+min;
+}
+function fechaISO(){return new Date().toISOString();}
+function fechaPDF(iso){
+  // Convierte ISO a formato legible para PDF: "19 de abril de 2026, 14:32"
+  if(!iso)return '—';
+  try{
+    var d=new Date(iso);
+    var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
+               'septiembre','octubre','noviembre','diciembre'];
+    var dia=d.getDate();
+    var mes=meses[d.getMonth()];
+    var anio=d.getFullYear();
+    var hh=String(d.getHours()).padStart(2,'0');
+    var min=String(d.getMinutes()).padStart(2,'0');
+    return dia+' de '+mes+' de '+anio+', '+hh+':'+min;
+  }catch(e){return iso;}
+}
 function show(id){var e=g(id);if(e)e.style.display='';}
 function hide(id){var e=g(id);if(e)e.style.display='none';}
 function txt(id,v){var e=g(id);if(e)e.textContent=v;}
@@ -878,6 +932,10 @@ function aplicarPerfil(perfil){
   if(sub&&nombre)sub.textContent='Vamos a organizar '+(perfil==='emprendedor'||perfil==='freelancer'?'las finanzas de tu actividad.':'tus finanzas.')+' Son solo 4 pasos.';
   var alertaLab=g('mp-alerta-laboral');
   if(alertaLab)alertaLab.style.display=c.sii?'':'none';
+  // Mostrar botón SII solo para emprendedor y freelancer
+  ['btn-sii-wrap','btn-sii-dash'].forEach(function(id){
+    var el=g(id);if(el)el.style.display=c.sii?'':'none';
+  });
   perfilActivo=perfil;
 }
 window.aplicarPerfil=aplicarPerfil;
@@ -936,7 +994,7 @@ function registrarGasto(monto,desc,tipo,emoji,catNombre){
     d.setAttribute('data-tipo',tipo);d.setAttribute('data-cat',catNombre);d.setAttribute('data-monto',monto);
     d.innerHTML='<div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">'+emoji+'</div>'
       +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+desc+'</div>'
-      +'<div style="font-size:11px;color:var(--t3);">'+(tipo==='fijo'?'Fijo':'Variable')+' · '+catNombre+' · ahora</div></div>'
+      +'<div style="font-size:11px;color:var(--t3);">'+(tipo==='fijo'?'Fijo':'Variable')+' · '+catNombre+' · '+fechaCorta()+'</div></div>'
       +'<div style="font-size:13px;font-weight:700;color:'+colorAmt+';font-family:monospace;">'+amtFmt+'</div>';
     return d;
   }
@@ -946,9 +1004,9 @@ function registrarGasto(monto,desc,tipo,emoji,catNombre){
   function mkRow(color){
     var row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:.5px solid var(--line);';
-    row.setAttribute('data-cat',catNombre);row.setAttribute('data-monto',monto);
+    row.setAttribute('data-cat',catNombre);row.setAttribute('data-monto',monto);row.setAttribute('data-fecha',fechaISO());
     row.innerHTML='<div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">'+emoji+'</div>'
-      +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+desc+'</div><div style="font-size:11px;color:var(--t3);">'+(tipo==='fijo'?'Mensual · fijo':'Variable')+'</div></div>'
+      +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+desc+'</div><div style="font-size:11px;color:var(--t3);">'+(tipo==='fijo'?'Mensual · fijo':'Variable')+' · '+fechaCorta()+'</div></div>'
       +'<div style="font-size:13px;font-weight:700;color:'+color+';font-family:monospace;">'+amtFmt+'</div>'
       +'<span onclick="this.parentElement.remove();mpRecalc();if(isPro){mpRecalcDash();renderInsights();}" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>';
     return row;
@@ -1024,23 +1082,46 @@ function confirmarVoz(){
 window.confirmarVoz=confirmarVoz;
 
 // ══ MODO BÁSICO ══
+var basTipoGasto='variable'; // 'fijo' o 'variable'
+
+function basSelTipo(tipo){
+  basTipoGasto=tipo;
+  var pf=g('bas-tipo-fijo'),pv=g('bas-tipo-variable');
+  if(pf)pf.classList.toggle('on',tipo==='fijo');
+  if(pv)pv.classList.toggle('on',tipo==='variable');
+}
+window.basSelTipo=basSelTipo;
+
 function basAgregar(tipo){
   var desc=g('bas-desc')?g('bas-desc').value.trim():'';
   var monto=pa(g('bas-monto')?g('bas-monto').value:'');
   if(!desc||!monto)return;
-  if(tipo==='ingreso')mpData.ingresos+=monto;
-  else mpData.vars+=monto;
+  if(tipo==='ingreso'){
+    mpData.ingresos+=monto;
+  } else {
+    // Clasificar según selector fijo/variable
+    if(basTipoGasto==='fijo') mpData.fijos+=monto;
+    else mpData.vars+=monto;
+  }
   var lista=g('bas-lista');
   if(lista){
     var row=document.createElement('div');
     row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--line);font-size:13px;';
-    row.innerHTML='<span style="color:var(--t2);">'+desc+'</span><span style="font-weight:700;color:'+(tipo==='ingreso'?'var(--green)':'var(--red)')+';">'+fmt(monto)+'</span>';
+    var tipoLabel=tipo==='ingreso'?'Ingreso':(basTipoGasto==='fijo'?'Fijo':'Variable');
+    var tagColor=tipo==='ingreso'?'var(--gdim),var(--green)':basTipoGasto==='fijo'?'var(--edim),var(--b2)':'var(--adim),var(--amber)';
+    var cols=tagColor.split(',');
+    row.innerHTML='<div style="display:flex;align-items:center;gap:8px;">'
+      +'<span style="font-size:10px;font-weight:700;background:'+cols[0]+';color:'+cols[1]+';padding:2px 7px;border-radius:4px;">'+tipoLabel+'</span>'
+      +'<span style="color:var(--t2);">'+desc+'</span>'
+      +'</div>'
+      +'<span style="font-weight:700;color:'+(tipo==='ingreso'?'var(--green)':'var(--red)')+';">'+fmt(monto)+'</span>';
     lista.prepend(row);
   }
   if(g('bas-desc'))g('bas-desc').value='';
   if(g('bas-monto'))g('bas-monto').value='';
-  var disp=mpData.ingresos-mpData.vars;
-  txt('bas-ing',fmt(mpData.ingresos));txt('bas-gas',fmt(mpData.vars));
+  var disp=mpData.ingresos-mpData.fijos-mpData.vars;
+  txt('bas-ing',fmt(mpData.ingresos));
+  txt('bas-gas',fmt(mpData.fijos+mpData.vars));
   var dispEl=g('bas-disp');if(dispEl){dispEl.textContent=fmt(disp);dispEl.style.color=disp<0?'var(--red)':'var(--v2)';}
 }
 window.basAgregar=basAgregar;
@@ -1118,9 +1199,9 @@ function mpAddFijo(){
   var amt=m?pa(m.value):0;
   var emp=g('mp-fijos-empty');if(emp)emp.style.display='none';
   var row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:.5px solid var(--line);';
-  row.setAttribute('data-cat','Fijo');row.setAttribute('data-monto',amt);
+  row.setAttribute('data-cat','Fijo');row.setAttribute('data-monto',amt);row.setAttribute('data-fecha',fechaISO());
   row.innerHTML='<div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">📌</div>'
-    +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+n.value+'</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo</div></div>'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+n.value+'</div><div style="font-size:11px;color:var(--t3);">Mensual · fijo · '+fechaCorta()+'</div></div>'
     +'<div style="font-size:13px;font-weight:700;color:var(--t1);font-family:monospace;">'+fmt(amt)+'</div>'
     +'<span onclick="this.parentElement.remove();mpRecalc();" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>';
   var fl=g('mp-fijos-list');if(fl)fl.appendChild(row);
@@ -1135,7 +1216,7 @@ function mpAddVar(){
   var row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:.5px solid var(--line);';
   row.setAttribute('data-cat','Otro');row.setAttribute('data-monto',amt);
   row.innerHTML='<div style="width:34px;height:34px;background:var(--edim);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">💳</div>'
-    +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+n.value+'</div><div style="font-size:11px;color:var(--t3);">Variable</div></div>'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--t1);">'+n.value+'</div><div style="font-size:11px;color:var(--t3);">Variable · '+fechaCorta()+'</div></div>'
     +'<div style="font-size:13px;font-weight:700;color:var(--red);font-family:monospace;">'+fmt(amt)+'</div>'
     +'<span onclick="this.parentElement.remove();mpRecalc();" style="font-size:18px;color:var(--t3);cursor:pointer;padding:0 4px;">×</span>';
   var vl=g('mp-vars-list');if(vl)vl.appendChild(row);
@@ -1607,7 +1688,7 @@ function exportPDF(){
     // Tabla resumen
     '.tbl{width:100%;border-collapse:collapse;}',
     '.tbl td{padding:10px 0;border-bottom:1px solid #F0F4F8;vertical-align:middle;}',
-    '.tbl td:last-child{text-align:right;font-family:"Courier New",monospace;font-weight:600;}',
+    '.tbl td:last-child{text-align:right;font-family:monospace;font-weight:600;}',
     '.tbl tr:last-child td{border-bottom:none;}',
     '.tbl .lbl{color:#4A5568;font-size:13px;}',
     '.tbl .lbl-sub{color:#7A8FA0;font-size:12px;padding-left:14px;}',
@@ -1627,13 +1708,13 @@ function exportPDF(){
     '.dist-label{flex:1;font-size:13px;color:#4A5568;}',
     '.dist-bar{width:120px;}',
     '.dist-pct{font-size:13px;font-weight:700;color:#1C2B3A;min-width:36px;text-align:right;}',
-    '.dist-amt{font-size:12px;color:#7A8FA0;min-width:90px;text-align:right;font-family:"Courier New",monospace;}',
+    '.dist-amt{font-size:12px;color:#7A8FA0;min-width:90px;text-align:right;font-family:monospace;}',
     // Detalle items
     '.item-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #F0F4F8;}',
     '.item-row:last-child{border-bottom:none;}',
     '.item-name{font-size:13px;color:#1C2B3A;font-weight:500;}',
     '.item-cat{font-size:11px;color:#7A8FA0;margin-top:2px;}',
-    '.item-amt{font-size:13px;font-weight:600;font-family:"Courier New",monospace;color:#C0392B;}',
+    '.item-amt{font-size:13px;font-weight:600;font-family:monospace;color:#C0392B;}',
     // Insights
     '.insight{border-left:3px solid;border-radius:0 6px 6px 0;padding:11px 14px;margin-bottom:10px;background:#F8FAFC;}',
     '.insight:last-child{margin-bottom:0;}',
@@ -1671,8 +1752,21 @@ function exportPDF(){
   // Detalle fijos
   var htmlFijos='';
   if(fijoRows.length>0){
-    htmlFijos='<div class="section"><div class="sec-title">Detalle — gastos fijos</div>'
-      +fijoRows.map(function(r){return '<div class="item-row"><div><div class="item-name">'+r.name+'</div></div><div class="item-amt">'+fmtP(r.monto)+'</div></div>';}).join('')
+    htmlFijos='<div class="section"><div class="sec-title">Detalle — gastos fijos ('+fijoRows.length+' registros)</div>'
+      +'<table style="width:100%;border-collapse:collapse;">'
+      +'<thead><tr>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:left;">Descripción</th>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:left;">Fecha registro</th>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:right;">Monto</th>'
+      +'</tr></thead><tbody>'
+      +fijoRows.map(function(r){
+        return '<tr>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:13px;font-weight:500;color:#1C2B3A;">'+r.name+'</td>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:11px;color:#7A8FA0;">'+fechaPDF(r.fecha)+'</td>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:13px;font-weight:600;font-family:monospace;color:#C0392B;text-align:right;">'+fmtP(r.monto)+'</td>'
+          +'</tr>';
+      }).join('')
+      +'</tbody></table>'
       +'</div>';
   } else {
     htmlFijos='<div class="section"><div class="sec-title">Detalle — gastos fijos</div><p style="font-size:12px;color:#7A8FA0;padding:8px 0;">Sin gastos fijos registrados.</p></div>';
@@ -1681,8 +1775,23 @@ function exportPDF(){
   // Detalle variables
   var htmlVars='';
   if(varRows.length>0){
-    htmlVars='<div class="section"><div class="sec-title">Detalle — gastos variables</div>'
-      +varRows.map(function(r){return '<div class="item-row"><div><div class="item-name">'+r.name+'</div><div class="item-cat">'+r.cat+'</div></div><div class="item-amt">'+fmtP(r.monto)+'</div></div>';}).join('')
+    htmlVars='<div class="section"><div class="sec-title">Detalle — gastos variables ('+varRows.length+' registros)</div>'
+      +'<table style="width:100%;border-collapse:collapse;">'
+      +'<thead><tr>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:left;">Descripción</th>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:left;">Categoría</th>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:left;">Fecha registro</th>'
+      +'<th style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:8px 4px;border-bottom:1px solid #E8EDF2;text-align:right;">Monto</th>'
+      +'</tr></thead><tbody>'
+      +varRows.map(function(r){
+        return '<tr>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:13px;font-weight:500;color:#1C2B3A;">'+r.name+'</td>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:11px;"><span style="background:#EBF2FF;color:#2D5BE3;padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;">'+r.cat+'</span></td>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:11px;color:#7A8FA0;">'+fechaPDF(r.fecha)+'</td>'
+          +'<td style="padding:9px 4px;border-bottom:1px solid #F0F4F8;font-size:13px;font-weight:600;font-family:monospace;color:#C0392B;text-align:right;">'+fmtP(r.monto)+'</td>'
+          +'</tr>';
+      }).join('')
+      +'</tbody></table>'
       +'</div>';
   } else {
     htmlVars='<div class="section"><div class="sec-title">Detalle — gastos variables</div><p style="font-size:12px;color:#7A8FA0;padding:8px 0;">Sin gastos variables registrados.</p></div>';
@@ -1799,6 +1908,184 @@ function exportPDF(){
   w.document.close();
 }
 window.exportPDF=exportPDF;
+
+
+// ══════════════════════════════════════════════
+// REPORTE SII — Orientativo para contador
+// Solo disponible en perfiles Emprendedor/Freelancer
+// ══════════════════════════════════════════════
+function exportSII(){
+  var nombre=(g('ob-nombre')?g('ob-nombre').value.trim():'')||'Usuario';
+  var perfil=perfilActivo||'';
+  var fecha=new Date();
+  var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var mesNombre=meses[fecha.getMonth()]+' '+fecha.getFullYear();
+  var fechaStr=fecha.toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'});
+
+  // Recolectar todos los gastos con fecha
+  function recSII(sel){
+    var rows=[];
+    document.querySelectorAll(sel).forEach(function(row){
+      var m=parseInt(row.getAttribute('data-monto')||0);
+      var cat=row.getAttribute('data-cat')||'—';
+      var fecha=row.getAttribute('data-fecha')||'';
+      var name='';
+      if(row.children.length>=2){var info=row.children[1];if(info&&info.children.length>0)name=info.children[0].textContent.trim();}
+      if(m&&name)rows.push({name:name,monto:m,cat:cat,fecha:fecha});
+    });
+    return rows;
+  }
+  var fijoRows=recSII('#mp-fijos-list [data-monto]');
+  var varRows=recSII('#mp-vars-list [data-monto]');
+  var ing=mpData.ingresos,f=mpData.fijos,v=mpData.vars;
+  var totalGastos=f+v;
+  var todosGastos=[];
+  fijoRows.forEach(function(r){todosGastos.push({name:r.name,monto:r.monto,cat:r.cat,fecha:r.fecha,tipo:'Fijo'});});
+  varRows.forEach(function(r){todosGastos.push({name:r.name,monto:r.monto,cat:r.cat,fecha:r.fecha,tipo:'Variable'});});
+  todosGastos.sort(function(a,b){if(!a.fecha&&!b.fecha)return 0;if(!a.fecha)return 1;if(!b.fecha)return -1;return new Date(b.fecha)-new Date(a.fecha);});
+  var totalPot=todosGastos.reduce(function(s,r){return s+r.monto;},0);
+
+  var w=window.open('','_blank');
+  if(!w){alert('Activa las ventanas emergentes para generar el reporte.');return;}
+
+  var CSS=[
+    '*{box-sizing:border-box;margin:0;padding:0;}',
+    'body{font-family:"Helvetica Neue",Arial,sans-serif;background:#fff;color:#1C2B3A;font-size:13px;line-height:1.5;}',
+    '.page{max-width:700px;margin:0 auto;padding:48px 40px;}',
+    '.hdr{border-bottom:2px solid #1C2B3A;padding-bottom:18px;margin-bottom:28px;}',
+    '.hdr-logo{font-size:20px;font-weight:800;color:#1C2B3A;}',
+    '.hdr-logo span{color:#2D8EFF;}',
+    '.hdr-sub{font-size:11px;color:#7A8FA0;margin-top:3px;}',
+    '.alert-box{background:#FEF9E7;border:1px solid #D68910;border-radius:8px;padding:14px 18px;margin-bottom:24px;}',
+    '.alert-title{font-size:12px;font-weight:700;color:#D68910;margin-bottom:5px;}',
+    '.alert-body{font-size:11px;color:#7A8FA0;line-height:1.7;}',
+    '.section{margin-bottom:24px;}',
+    '.sec-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7A8FA0;padding-bottom:8px;border-bottom:1px solid #E8EDF2;margin-bottom:12px;}',
+    '.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}',
+    '.meta-cell{background:#F4F7FA;border-radius:8px;padding:13px 16px;}',
+    '.meta-l{font-size:10px;color:#7A8FA0;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}',
+    '.meta-v{font-size:16px;font-weight:700;color:#1C2B3A;}',
+    '.tbl{width:100%;border-collapse:collapse;}',
+    '.tbl th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7A8FA0;padding:9px 8px;border-bottom:2px solid #E8EDF2;text-align:left;}',
+    '.tbl th:last-child{text-align:right;}',
+    '.tbl td{padding:10px 8px;border-bottom:1px solid #F0F4F8;font-size:13px;vertical-align:middle;}',
+    '.tbl td:last-child{text-align:right;font-family:monospace;font-weight:600;}',
+    '.tbl tr:last-child td{border-bottom:none;}',
+    '.tbl .cat-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;background:#EBF2FF;color:#2D5BE3;font-weight:600;margin-left:6px;}',
+    '.total-row{background:#F4F7FA;border-radius:6px;overflow:hidden;margin-top:10px;}',
+    '.total-row td{padding:12px 14px!important;border-bottom:none!important;font-weight:700;}',
+    '.total-row td:first-child{font-size:14px;color:#1C2B3A;}',
+    '.total-row td:last-child{font-size:16px;color:#2D5BE3;}',
+    '.nota-box{background:#F4F7FA;border-radius:8px;padding:14px 18px;margin-top:20px;}',
+    '.nota-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7A8FA0;margin-bottom:6px;}',
+    '.nota-body{font-size:12px;color:#4A5568;line-height:1.7;}',
+    '.disclaimer{margin-top:32px;padding:14px 18px;background:#FDECEA;border:1px solid #E74C3C;border-radius:8px;font-size:11px;color:#7A8FA0;line-height:1.7;}',
+    '.disclaimer strong{color:#C0392B;}',
+    '.footer{margin-top:32px;padding-top:14px;border-top:1px solid #E8EDF2;display:flex;justify-content:space-between;font-size:10px;color:#7A8FA0;}',
+    '.print-btn{display:block;margin:28px auto 0;padding:11px 32px;background:#1C2B3A;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;}',
+    '@media print{.print-btn{display:none;}}'
+  ].join('');
+
+  function fmtP(n){return '$'+Math.round(n).toLocaleString('es-CL');}
+
+  w.document.write('<!DOCTYPE html><html lang="es"><head>'
+    +'<meta charset="UTF-8"><title>AhorraX · Reporte SII — '+mesNombre+'</title>'
+    +'<style>'+CSS+'</style></head><body><div class="page">');
+
+  // Header
+  w.document.write('<div class="hdr">'
+    +'<div class="hdr-logo">ahorra<span>X</span></div>'
+    +'<div class="hdr-sub">Reporte orientativo de gastos de actividad · '+mesNombre+'</div>'
+    +'</div>');
+
+  // Alerta orientativa
+  w.document.write('<div class="alert-box">'
+    +'<div class="alert-title">⚠ Documento orientativo — no constituye declaración oficial</div>'
+    +'<div class="alert-body">Este reporte tiene como único objetivo facilitar la comunicación con tu contador o asesor tributario. '
+    +'No reemplaza ningún documento oficial del SII. La deducibilidad real de cada gasto debe ser validada por un profesional '
+    +'habilitado según la normativa tributaria chilena vigente.</div>'
+    +'</div>');
+
+  // Datos del contribuyente
+  w.document.write('<div class="section"><div class="sec-title">Datos del contribuyente</div>'
+    +'<div class="meta-grid">'
+    +'<div class="meta-cell"><div class="meta-l">Nombre</div><div class="meta-v">'+nombre+'</div></div>'
+    +'<div class="meta-cell"><div class="meta-l">Actividad</div><div class="meta-v">'+perfil.charAt(0).toUpperCase()+perfil.slice(1)+'</div></div>'
+    +'<div class="meta-cell"><div class="meta-l">Período</div><div class="meta-v">'+mesNombre.charAt(0).toUpperCase()+mesNombre.slice(1)+'</div></div>'
+    +'<div class="meta-cell"><div class="meta-l">Ingresos declarados</div><div class="meta-v">'+fmtP(ing)+'</div></div>'
+    +'</div></div>');
+
+  // Gastos totales del período
+  w.document.write('<div class="section"><div class="sec-title">Resumen de gastos del período</div>'
+    +'<table class="tbl">'
+    +'<tr><td>Gastos fijos registrados</td><td>'+fmtP(f)+'</td></tr>'
+    +'<tr><td>Gastos variables registrados</td><td>'+fmtP(v)+'</td></tr>'
+    +'</table>'
+    +'<table class="tbl total-row" style="margin-top:10px;"><tr><td>Total gastos del período</td><td>'+fmtP(f+v)+'</td></tr></table>'
+    +'</div>');
+
+  // Resumen financiero del período
+  w.document.write('<div class="section"><div class="sec-title">Resumen del período</div>'
+    +'<table class="tbl">'
+    +'<tr><td>Ingresos declarados</td><td style="color:#1E7E34;font-family:monospace;font-weight:700;">'+fmtP(ing)+'</td></tr>'
+    +'<tr><td>Total gastos fijos</td><td style="color:#C0392B;font-family:monospace;font-weight:700;">'+fmtP(f)+'</td></tr>'
+    +'<tr><td>Total gastos variables</td><td style="color:#C0392B;font-family:monospace;font-weight:700;">'+fmtP(v)+'</td></tr>'
+    +'</table>'
+    +'<table class="tbl total-row" style="margin-top:10px;">'
+    +'<tr><td>Total egresos del período</td><td style="font-family:monospace;">'+fmtP(totalGastos)+'</td></tr>'
+    +'</table></div>');
+
+  // Listado completo de gastos con fecha
+  w.document.write('<div class="section"><div class="sec-title">Listado completo de gastos registrados ('
+    +todosGastos.length+' registros)</div>'
+    +(todosGastos.length>0
+      ?'<table class="tbl"><thead><tr><th style="width:35%;">Descripción</th><th style="width:15%;">Tipo</th><th style="width:20%;">Categoría</th><th style="width:20%;">Fecha registro</th><th style="width:10%;text-align:right;">Monto</th></tr></thead><tbody>'
+        +todosGastos.map(function(r){
+          var tipoColor=r.tipo==='Fijo'?'#2D5BE3':'#D68910';
+          var tipoBg=r.tipo==='Fijo'?'#EBF2FF':'#FEF9E7';
+          return '<tr>'
+            +'<td style="font-weight:500;">'+r.name+'</td>'
+            +'<td><span class="cat-tag" style="background:'+tipoBg+';color:'+tipoColor+';">'+r.tipo+'</span></td>'
+            +'<td><span class="cat-tag">'+r.cat+'</span></td>'
+            +'<td style="font-size:11px;color:#7A8FA0;">'+fechaPDF(r.fecha)+'</td>'
+            +'<td style="text-align:right;font-family:monospace;color:#C0392B;">'+fmtP(r.monto)+'</td>'
+            +'</tr>';
+        }).join('')
+        +'</tbody></table>'
+        +'<table class="tbl total-row" style="margin-top:10px;">'
+        +'<tr><td>Total período</td><td style="font-family:monospace;">'+fmtP(totalPot)+'</td></tr>'
+        +'</table>'
+      :'<p style="font-size:12px;color:#7A8FA0;padding:10px 0;">Sin gastos registrados en este período.</p>')
+    +'</div>');
+
+  // Notas para el contador
+  w.document.write('<div class="nota-box">'
+    +'<div class="nota-l">Notas para el contador</div>'
+    +'<div class="nota-body">'
+    +'· Los gastos marcados como "fijos" incluyen compromisos mensuales recurrentes (arriendo, servicios, suscripciones).<br>'
+    +'· Los gastos variables corresponden a egresos del período registrados manualmente por el usuario.<br>'
+    +'· La categorización fue realizada por el propio contribuyente y no ha sido verificada por AhorraX.<br>'
+    +'· Fuente de ingresos declarada: '+perfil+'. Período: '+mesNombre+'.'
+    +'</div></div>');
+
+  // Disclaimer
+  w.document.write('<div class="disclaimer">'
+    +'<strong>Importante:</strong> AhorraX es una herramienta informativa de organización financiera personal. '
+    +'Este documento no constituye asesoría tributaria, no reemplaza a un contador habilitado y no tiene valor legal '
+    +'ante el Servicio de Impuestos Internos (SII). La validación y presentación de gastos de actividad debe realizarse '
+    +'con un profesional contable autorizado.'
+    +'</div>');
+
+  w.document.write('<div class="footer">'
+    +'<span>AhorraX · Reporte orientativo SII · '+mesNombre+'</span>'
+    +'<span>Generado: '+fechaStr+'</span>'
+    +'</div>'
+    +'<button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>'
+    +'</div></body></html>');
+
+  w.document.close();
+}
+window.exportSII=exportSII;
 
 // ══ INIT ══
 document.addEventListener('DOMContentLoaded',function(){
