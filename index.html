@@ -181,10 +181,11 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       <div class="lbl">Monto</div>
       <input class="g-inp" id="gasto-monto" type="text" placeholder="Ej: $ 8.500" oninput="mostrarContextoUF()"/>
       <div id="gasto-uf-ctx" style="display:none;font-size:11px;color:var(--b2);margin-bottom:8px;padding:0 2px;"></div>
-      <div class="lbl">Descripción</div>
-      <input class="g-inp" id="gasto-desc" type="text" placeholder="Ej: Almuerzo, Arriendo, Farmacia..."/>
+      <div class="lbl" style="margin-bottom:5px;">Descripción</div>
+      <input class="g-inp" id="gasto-desc" type="text" placeholder="Ej: Almuerzo, Arriendo, Farmacia..." oninput="acSugerir()" autocomplete="off"/>
+      <div id="ac-sugerencias" style="display:none;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);margin-top:-6px;margin-bottom:8px;overflow:hidden;"></div>
       <div class="lbl">Tipo de gasto</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
         <div id="tipo-variable" class="ppill on" onclick="selTipo('variable')"><div style="font-size:12px;font-weight:700;">Variable</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">Del día a día</div></div>
         <div id="tipo-fijo" class="ppill" onclick="selTipo('fijo')"><div style="font-size:12px;font-weight:700;">Fijo</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">Mensual</div></div>
       </div>
@@ -230,9 +231,9 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
           <p id="voz-transcripcion" style="font-size:13px;color:var(--t2);margin-bottom:12px;font-style:italic;"></p>
           <div class="lbl">Monto</div>
           <input class="g-inp" id="voz-monto-edit" type="text" placeholder="$ monto"/>
-          <div class="lbl">Descripción</div>
+          <div class="lbl" style="margin-bottom:5px;">Descripción</div>
           <input class="g-inp" id="voz-desc-edit" type="text" placeholder="Descripción"/>
-          <div class="lbl">Tipo</div>
+          <div class="lbl" style="margin-bottom:5px;">Tipo</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div id="voz-tipo-variable" class="ppill on" onclick="selTipoVoz('variable')"><div style="font-size:12px;font-weight:700;">Variable</div></div>
             <div id="voz-tipo-fijo" class="ppill" onclick="selTipoVoz('fijo')"><div style="font-size:12px;font-weight:700;">Fijo</div></div>
@@ -256,6 +257,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     <span id="plan-badge" class="badge-basic">Básico</span>
     <span id="perfil-badge" style="display:none;font-size:10px;font-weight:700;background:var(--frost2);color:var(--t3);padding:3px 9px;border-radius:99px;border:.5px solid var(--line2);text-transform:capitalize;"></span>
     <button class="btn-inicio" onclick="resetApp()">Inicio</button>
+    <button id="btn-dev-reset" onclick="limpiarDatos()" style="font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border:.5px solid var(--line);border-radius:99px;background:transparent;font-family:'Sora',sans-serif;display:none;" title="Limpiar datos de prueba">⟳</button>
   </div>
 </div>
 
@@ -264,6 +266,10 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
   <div class="nv active" id="nv-mimes" onclick="tab('mimes')">
     <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M5 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     <span>Mi Mes</span>
+  </div>
+  <div class="nv" id="nv-agenda" onclick="tab('agenda')">
+    <svg viewBox="0 0 22 22" fill="none"><rect x="4" y="3" width="14" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 3v2M14 3v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 8h14" stroke="currentColor" stroke-width="1.4" opacity=".5"/><circle cx="8" cy="13" r="1" fill="currentColor" opacity=".7"/><circle cx="11" cy="13" r="1" fill="currentColor" opacity=".7"/><circle cx="14" cy="13" r="1" fill="currentColor" opacity=".4"/></svg>
+    <span>Agenda</span>
   </div>
   <div class="nv" id="nv-analisis" onclick="tab('analisis')">
     <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="12" width="4" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="9" y="7" width="4" height="12" rx="1.5" fill="currentColor" opacity=".7"/><rect x="15" y="3" width="4" height="16" rx="1.5" fill="currentColor"/></svg>
@@ -285,15 +291,15 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       </div>
       <span style="font-size:20px;font-weight:700;letter-spacing:-.4px;">ahorra<b style="color:var(--b2);">X</b></span>
     </div>
-    <div style="font-size:30px;font-weight:800;color:var(--t1);line-height:1.15;letter-spacing:-.7px;">Conoce tu dinero.</div>
-    <div style="font-size:30px;font-weight:800;color:var(--b2);line-height:1.15;letter-spacing:-.7px;">Contrólalo.</div>
+    <div style="font-size:30px;font-weight:800;color:var(--t1);line-height:1.15;letter-spacing:-.7px;">Ordena tu dinero.</div>
+    <div style="font-size:30px;font-weight:800;color:var(--b2);line-height:1.15;letter-spacing:-.7px;">Entiéndelo.</div>
     <div style="font-size:30px;font-weight:800;color:var(--green);line-height:1.15;letter-spacing:-.7px;margin-bottom:14px;">Toma mejores decisiones.</div>
-    <p style="font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:20px;">Tu asistente de inteligencia financiera personal. Registra tus ingresos y gastos, y deja que AhorraX te ayude a entender y mejorar tus hábitos financieros.</p>
+    <p style="font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:20px;">Registra tus ingresos y gastos, visualiza tu situación real al instante y recibe señales claras sobre tu comportamiento financiero.</p>
     <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;">
-      <span style="background:var(--gdim);border:.5px solid rgba(0,196,122,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--green);">● Dashboard en tiempo real</span>
-      <span style="background:var(--edim);border:.5px solid rgba(45,142,255,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--b2);">● Insights automáticos</span>
-      <span style="background:var(--vdim);border:.5px solid rgba(139,92,246,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--v2);">● Análisis de hábitos</span>
-      <span style="background:var(--adim);border:.5px solid rgba(245,166,35,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--amber);">● Alertas inteligentes</span>
+      <span style="background:var(--gdim);border:.5px solid rgba(0,196,122,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--green);">● Registro simple</span>
+      <span style="background:var(--edim);border:.5px solid rgba(45,142,255,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--b2);">● Visualización inmediata</span>
+      <span style="background:var(--vdim);border:.5px solid rgba(139,92,246,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--v2);">● Insights automáticos</span>
+      <span style="background:var(--adim);border:.5px solid rgba(245,166,35,.25);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--amber);">● Agenda financiera</span>
     </div>
     <!-- Ejemplo de insight -->
     <div class="card-e" style="margin-bottom:8px;">
@@ -396,7 +402,8 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
           <div><div id="mp-ing-confirm" style="font-size:12px;font-weight:700;color:var(--green);">Ingresos registrados</div><div style="font-size:11px;color:rgba(0,196,122,.6);">Ahora tus compromisos fijos.</div></div>
         </div>
         <p style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;">Gastos fijos mensuales</p>
-        <p class="sub">Los que pagas todos los meses — arriendo, servicios, suscripciones.</p>
+        <p class="sub" style="margin-bottom:10px;">Los que pagas todos los meses — arriendo, servicios, suscripciones.</p>
+        <div style="background:var(--edim);border-radius:var(--rs);padding:9px 12px;margin-bottom:10px;border:.5px solid rgba(45,142,255,.2);display:flex;align-items:flex-start;gap:8px;"><span style="font-size:13px;flex-shrink:0;">📅</span><p style="font-size:11px;color:var(--b2);line-height:1.55;">Si tienes compromisos en tu <b>Agenda</b>, márcalos como pagados desde allí — se registrarán aquí automáticamente.</p></div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
           <div style="display:flex;gap:7px;">
             <input type="text" id="mp-gf-n" placeholder="Ej: Arriendo, Netflix..." style="flex:1;background:var(--navy2);border:.5px solid var(--line2);border-radius:var(--rs);padding:10px 13px;font-size:13px;color:var(--t1);outline:none;font-family:'Sora',sans-serif;"/>
@@ -500,6 +507,10 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
             <p id="mp-dash-greeting" style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;">Abril 2026 · Tu situación</p>
             <p id="mp-hero-disp" style="font-size:36px;font-weight:800;color:var(--v2);letter-spacing:-1.5px;line-height:1;margin-bottom:5px;">$0</p>
             <p style="font-size:12px;color:var(--t3);">disponible real este mes</p>
+          <div id="hero-proy-wrap" style="display:none;margin-top:6px;background:rgba(139,92,246,.12);border-radius:6px;padding:6px 10px;border:.5px solid rgba(139,92,246,.2);">
+            <span style="font-size:10px;color:var(--t3);">Proyectado con agenda: </span>
+            <span id="hero-proy-num" style="font-size:12px;font-weight:700;color:var(--v2);"></span>
+          </div>
           </div>
           <div id="user-avatar" class="av">JM</div>
         </div>
@@ -564,12 +575,21 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       <div class="card">
         <div class="lbl">Alertas e insights</div>
         <div id="dash-insights-list">
-          <p style="font-size:13px;color:var(--t3);padding:10px 0;">Los insights aparecerán aquí cuando ingreses tus datos.</p>
+          <p style="font-size:13px;color:var(--t3);padding:10px 0;line-height:1.6;">Los insights se generan automáticamente cuando ingresas ingresos y gastos. Completa los pasos anteriores para verlos.</p>
         </div>
         <button onclick="tab('analisis')" style="width:100%;margin-top:10px;padding:10px;border-radius:var(--rs);border:.5px solid var(--line2);background:transparent;color:var(--b2);font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;">
           Ver análisis completo
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#4FA3FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </div>
+
+      <!-- COMPROMISOS PRÓXIMOS (agenda) -->
+      <div id="dash-agenda-card" style="display:none;background:var(--navy);border-radius:var(--r);border:.5px solid rgba(245,166,35,.25);padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div class="lbl" style="margin:0;">Compromisos próximos</div>
+          <button onclick="tab('agenda')" style="font-size:11px;font-weight:700;color:var(--b2);background:transparent;border:none;cursor:pointer;font-family:'Sora',sans-serif;padding:0;">Ver agenda →</button>
+        </div>
+        <div id="dash-agenda-lista"></div>
       </div>
 
       <!-- ÚLTIMOS GASTOS -->
@@ -605,8 +625,8 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
   <!-- BÁSICO -->
   <div id="mimes-basico" style="display:none;">
     <div class="card-grad">
-      <p style="font-size:13px;font-weight:700;color:var(--b2);margin-bottom:6px;">Modo básico activo</p>
-      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px;">Puedes registrar ingresos y gastos del mes actual y ver tu disponible real. Para análisis, insights y historial activa Pro.</p>
+      <p style="font-size:13px;font-weight:700;color:var(--b2);margin-bottom:6px;">Plan básico</p>
+      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px;">Registra tus ingresos y gastos del mes y ve tu disponible real en tiempo real. El plan Pro agrega análisis automático, insights e historial mensual.</p>
       <button onclick="tab('plan')" class="btn b-blue">Ver plan Pro →</button>
     </div>
     <div class="card">
@@ -674,7 +694,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     <div class="card">
       <div class="lbl">Insights automáticos</div>
       <div id="all-insights-list">
-        <p style="font-size:13px;color:var(--t3);padding:10px 0;">Ingresa tus datos en Mi Mes para ver los insights.</p>
+        <p style="font-size:13px;color:var(--t3);padding:10px 0;line-height:1.6;">Los insights aparecen automáticamente cuando registras tus ingresos y gastos en Mi Mes.</p>
       </div>
     </div>
 
@@ -696,26 +716,14 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     </div>
 
     <!-- HISTORIAL -->
-    <div class="card">
-      <div class="lbl">Historial — meses anteriores</div>
-      <div style="background:var(--navy2);border-radius:var(--rs);padding:13px;border:.5px solid var(--line);margin-bottom:8px;cursor:pointer;" onclick="toggleHistorial(this)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;font-weight:700;">Marzo 2026</span><span class="tag t-green">Disponible $198.000</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Ingresos</div><div style="font-size:13px;font-weight:700;color:var(--green);">$1.100.000</div></div>
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Gastos</div><div style="font-size:13px;font-weight:700;color:var(--red);">$902.000</div></div>
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Variables</div><div style="font-size:13px;font-weight:700;color:var(--amber);">$180.000</div></div>
+    <div class="card" id="analisis-historial">
+          <div class="lbl">Historial — meses anteriores</div>
+          <div id="historial-lista"></div>
+          <div id="historial-vacio" style="text-align:center;padding:20px 0;">
+            <p style="font-size:13px;color:var(--t3);line-height:1.6;">El historial aparecerá aquí<br>a partir del segundo mes de uso.</p>
+            <p style="font-size:11px;color:var(--t3);margin-top:6px;opacity:.6;">Al exportar el PDF de un mes, ese mes queda guardado<br>como referencia para el siguiente.</p>
+          </div>
         </div>
-        <div class="hist-detail" style="display:none;"><hr class="dv"><div style="font-size:12px;color:var(--b2);margin-bottom:3px;">Ingresos: $1.100.000 (+$100.000 vs febrero)</div><div style="font-size:12px;color:var(--green);">Gastos variables: $180.000 (-$33.000 vs febrero)</div></div>
-      </div>
-      <div style="background:var(--navy2);border-radius:var(--rs);padding:13px;border:.5px solid var(--line);cursor:pointer;" onclick="toggleHistorial(this)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;font-weight:700;">Febrero 2026</span><span class="tag t-amber">Disponible $89.000</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Ingresos</div><div style="font-size:13px;font-weight:700;color:var(--green);">$950.000</div></div>
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Gastos</div><div style="font-size:13px;font-weight:700;color:var(--red);">$861.000</div></div>
-          <div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Variables</div><div style="font-size:13px;font-weight:700;color:var(--amber);">$240.000</div></div>
-        </div>
-      </div>
-    </div>
 
     <!-- ACCIONES -->
     <div class="card">
@@ -737,6 +745,128 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
     </div>
   </div>
 </div>
+<!-- ══ AGENDA FINANCIERA ══ -->
+<div class="screen" id="sc-agenda">
+
+  <!-- Header -->
+  <div class="card-grad" style="overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:var(--eglow);pointer-events:none;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <p style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:5px;">Compromisos financieros</p>
+        <p style="font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.5px;margin-bottom:4px;" id="ag-titulo">Agenda</p>
+        <p style="font-size:13px;color:var(--t3);" id="ag-subtitulo">Cargando...</p>
+      </div>
+      <button onclick="abrirFormAgenda()" style="width:40px;height:40px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px var(--eglow);">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <!-- Proyección -->
+    <div id="ag-proyeccion" style="display:none;margin-top:14px;background:var(--frost);border-radius:var(--rs);padding:11px 14px;border:.5px solid var(--line2);">
+      <p style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:4px;">Disponible proyectado fin de mes</p>
+      <p id="ag-proy-num" style="font-size:24px;font-weight:800;letter-spacing:-.5px;">$0</p>
+      <p id="ag-proy-sub" style="font-size:11px;color:var(--t3);margin-top:2px;"></p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div style="display:flex;gap:8px;">
+    <div id="ag-f-todos" class="ppill on" onclick="agFiltrar('todos')" style="flex:1;cursor:pointer;font-size:12px;">Todos</div>
+    <div id="ag-f-pagar" class="ppill" onclick="agFiltrar('pagar')" style="flex:1;cursor:pointer;font-size:12px;">Por pagar</div>
+    <div id="ag-f-cobrar" class="ppill" onclick="agFiltrar('cobrar')" style="flex:1;cursor:pointer;font-size:12px;">Por cobrar</div>
+  </div>
+
+  <!-- Lista de compromisos -->
+  <div id="ag-lista-wrap">
+    <div id="ag-lista"></div>
+    <div id="ag-vacio" class="card" style="text-align:center;padding:32px 20px;">
+      <div style="font-size:36px;margin-bottom:12px;">📅</div>
+      <p style="font-size:14px;font-weight:600;color:var(--t1);margin-bottom:6px;">Sin compromisos registrados</p>
+      <p style="font-size:13px;color:var(--t3);line-height:1.6;margin-bottom:16px;">Agrega tus próximos pagos o ingresos<br>para ver tu proyección financiera.</p>
+      <button onclick="abrirFormAgenda()" class="btn b-blue" style="max-width:220px;margin:0 auto;">+ Agregar compromiso</button>
+    </div>
+  </div>
+
+  <!-- Resumen de la agenda -->
+  <div id="ag-resumen" style="display:none;">
+    <div class="card">
+      <div class="lbl">Resumen del período</div>
+      <div class="mg2" style="margin-bottom:0;">
+        <div class="met"><div class="met-l">Por pagar</div><div id="ag-total-pagar" class="met-v red">$0</div></div>
+        <div class="met"><div class="met-l">Por cobrar</div><div id="ag-total-cobrar" class="met-v green">$0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Agregar compromiso -->
+  <div id="ag-modal-ov" style="display:none;position:fixed;inset:0;background:rgba(8,12,20,.8);z-index:300;align-items:flex-end;justify-content:center;overflow-y:auto;">
+    <div style="width:100%;max-width:480px;background:var(--navy);border-radius:22px 22px 0 0;padding:18px 16px 36px;border-top:.5px solid var(--line2);animation:su .22s ease;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div style="width:36px;height:4px;background:var(--frost3);border-radius:99px;margin:0 auto 20px;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <p style="font-size:16px;font-weight:700;color:var(--t1);">Nuevo compromiso</p>
+        <button onclick="cerrarFormAgenda()" style="background:transparent;border:none;color:var(--t3);font-size:22px;cursor:pointer;padding:0;">×</button>
+      </div>
+
+      <!-- Tipo principal -->
+      <div class="lbl" style="margin-bottom:5px;">¿Es un pago o un cobro?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
+        <div id="ag-tipo-pagar" class="ppill on" onclick="agSelTipo('pagar')" style="cursor:pointer;">
+          <div style="font-size:12px;font-weight:700;">💸 Por pagar</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Arriendo, crédito, servicio...</div>
+        </div>
+        <div id="ag-tipo-cobrar" class="ppill" onclick="agSelTipo('cobrar')" style="cursor:pointer;">
+          <div style="font-size:12px;font-weight:700;">💰 Por cobrar</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Sueldo, honorarios, deuda...</div>
+        </div>
+      </div>
+      <!-- Subtipo: fijo vs variable (solo para "por pagar") -->
+      <div id="ag-subtipo-wrap" style="margin-bottom:10px;">
+        <div class="lbl" style="margin-bottom:5px;">¿Cómo clasificar al pagar?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+          <div id="ag-subtipo-fijo" class="ppill on" onclick="agSelSubtipo('fijo')" style="cursor:pointer;">
+            <div style="font-size:12px;font-weight:700;">📌 Gasto fijo</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px;">Se repite cada mes</div>
+          </div>
+          <div id="ag-subtipo-variable" class="ppill" onclick="agSelSubtipo('variable')" style="cursor:pointer;">
+            <div style="font-size:12px;font-weight:700;">💳 Gasto variable</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px;">Pago puntual</div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;">Al marcarlo como pagado, se registrará automáticamente en tu dashboard.</p>
+      </div>
+
+      <!-- Nombre -->
+      <div class="lbl" style="margin-bottom:5px;">Descripción</div>
+      <div style="display:flex;gap:7px;margin-bottom:6px;">
+        <input class="g-inp" id="ag-inp-nombre" type="text" placeholder="Ej: Arriendo, Sueldo de mayo..." style="padding:11px 14px;margin-bottom:0;flex:1;"/>
+        <button id="ag-voz-btn" onclick="agIniciarVoz()" title="Dictar" style="width:44px;height:44px;flex-shrink:0;border-radius:var(--rs);background:var(--navy2);border:.5px solid var(--line2);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 30 30" fill="none"><rect x="10" y="3" width="10" height="16" rx="5" fill="var(--b2)"/><path d="M5 15a10 10 0 0020 0" stroke="var(--b2)" stroke-width="2" stroke-linecap="round"/><line x1="15" y1="25" x2="15" y2="29" stroke="var(--b2)" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div id="ag-voz-estado" style="display:none;font-size:11px;padding:7px 10px;border-radius:6px;margin-bottom:6px;"></div>
+
+      <!-- Monto -->
+      <div class="lbl" style="margin-bottom:5px;">Monto</div>
+      <input class="g-inp" id="ag-inp-monto" type="text" placeholder="Ej: $ 350.000" style="padding:11px 14px;margin-bottom:6px;"/>
+
+      <!-- Fecha -->
+      <div class="lbl" style="margin-bottom:5px;">Fecha de vencimiento / cobro</div>
+      <input class="g-inp" id="ag-inp-fecha" type="date" style="color:var(--t1);padding:11px 14px;margin-bottom:6px;"/>
+
+      <!-- Recurrente -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--navy2);border-radius:var(--rs);border:.5px solid var(--line2);">
+        <input type="checkbox" id="ag-recurrente" style="width:16px;height:16px;accent-color:var(--blue);cursor:pointer;"/>
+        <div>
+          <label for="ag-recurrente" style="font-size:13px;font-weight:600;color:var(--t1);cursor:pointer;">Compromiso mensual recurrente</label>
+          <div style="font-size:11px;color:var(--t3);margin-top:1px;">Se repite cada mes en la misma fecha</div>
+        </div>
+      </div>
+
+      <button class="btn b-blue" onclick="agGuardar()">Guardar compromiso →</button>
+    </div>
+  </div>
+
+</div>
 <!-- ══ PLAN ══ -->
 <div class="screen" id="sc-plan">
   <div class="card-grad" style="overflow:hidden;">
@@ -752,11 +882,11 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
       <span style="font-size:22px;font-weight:800;">$0 <span style="font-size:13px;font-weight:400;color:var(--t3);">/mes</span></span>
     </div>
     <div style="font-size:13px;color:var(--t2);line-height:2.2;margin-bottom:14px;">
-      · Registro de ingresos y gastos<br>
-      · Clasificación básica (fijo / variable)<br>
-      · Dashboard con disponible real<br>
+      · Registro manual de ingresos y gastos<br>
+      · Clasificación por tipo (fijo / variable)<br>
+      · Total disponible en tiempo real<br>
       · Vista del mes actual<br>
-      <span style="color:var(--t3);">· Sin historial · Sin análisis · Sin insights · Sin PDF completo</span>
+      <span style="color:var(--t3);">· Sin dashboard completo · Sin insights · Sin historial · Sin exportación</span>
     </div>
     <button class="btn b-out" onclick="enterApp(false)">Usar plan básico</button>
   </div>
@@ -789,7 +919,7 @@ hr.dv{border:none;border-top:.5px solid var(--line);margin:14px 0;}
 'use strict';
 
 // ══ ESTADO GLOBAL ══
-var TABS = ['mimes','analisis','plan'];
+var TABS = ['mimes','agenda','analisis','plan'];
 var isPro = false;
 var navHistory = [];
 var perfilActivo = 'emprendedor';
@@ -842,6 +972,7 @@ function showScreen(name){
 function tab(t){
   navHistory.push(t);showScreen(t);updateBack();goTop();
   if(t==='analisis')renderAnalisis();
+  if(t==='agenda'){renderAgenda();actualizarProyeccion();}
 }
 window.tab=tab;
 function goBack(){
@@ -890,7 +1021,11 @@ function enterApp(withAccount){
     aplicarPerfil(perfilActivo);
     // Mostrar badge de perfil
     var pb=g('perfil-badge');if(pb){pb.style.display='';pb.textContent=perfilActivo;}
-    setTimeout(function(){mpGoStep(1);},80);
+    setTimeout(function(){
+      mpGoStep(1);
+      // Scroll al tope después de la animación de entrada
+      setTimeout(function(){window.scrollTo({top:0,behavior:'instant'});},50);
+    },100);
   } else {
     if(badge){badge.textContent='Básico';badge.className='badge-basic';}
     hide('mimes-pro');show('mimes-basico');
@@ -915,6 +1050,18 @@ function resetApp(){
   goTop();
 }
 window.resetApp=resetApp;
+
+// Limpiar TODOS los datos de prueba (localStorage completo de AhorraX)
+function limpiarDatos(){
+  if(!confirm('¿Limpiar todos los datos guardados?\n\nEsto eliminará agenda, historial e indicadores en caché.'))return;
+  ['ax_agenda_v1','ax_hist_v2','ax_ind_v1','ax_historial_v1'].forEach(function(k){
+    try{localStorage.removeItem(k);}catch(e){}
+  });
+  resetApp();
+}
+window.limpiarDatos=limpiarDatos;
+// Acceso dev: escribir axDev() en la consola del navegador para mostrar el botón
+window.axDev=function(){var b=document.getElementById('btn-dev-reset');if(b)b.style.display='';console.log('Modo dev activado. Botón de reset visible.');};
 
 // ══ PERFIL ══
 function aplicarPerfil(perfil){
@@ -1177,7 +1324,9 @@ function mpGoStep(n){
   }
   if(n===2){var ic=g('mp-ing-confirm');if(ic)ic.textContent='Ingresos registrados: '+fmt(mpData.ingresos);}
   if(n===5){mpRecalcDash();renderInsights();cargarIndicadores();}
-  goTop();
+  // Scroll instantáneo al paso 1 (bienvenida), suave en los demás
+  if(n===1)window.scrollTo({top:0,behavior:'instant'});
+  else goTop();
 }
 window.mpGoStep=mpGoStep;
 
@@ -1258,6 +1407,15 @@ function mpRecalcDash(){
   // Resumen en Análisis
   txt('an-ing',fmt(ing));txt('an-gas',fmt(f+v));
   var anDisp=g('an-disp');if(anDisp){anDisp.textContent=fmt(disp);anDisp.style.color=isDeficit?'var(--red)':'var(--v2)';}
+  // Proyección con agenda en hero
+  var impacto=AgendaService.impactoDisponible(disp);
+  var heroWrap=g('hero-proy-wrap'),heroNum=g('hero-proy-num');
+  if(heroWrap&&impacto.pendientes>0){
+    heroWrap.style.display='';
+    if(heroNum){heroNum.textContent=fmt(impacto.proyectado);heroNum.style.color=impacto.proyectado<0?'var(--red)':'var(--v2)';}
+  } else if(heroWrap){heroWrap.style.display='none';}
+  // Card de compromisos en dashboard
+  actualizarDashboardAgenda();
 }
 
 // ══════════════════════════════════════════════════
@@ -1396,8 +1554,8 @@ var InsightsService=(function(){
       var pctGasto=Math.round(totalGastos/ing*100);
       insights.push({
         id:'primer_mes', severidad:'info',
-        titulo:'Este es tu primer mes registrado',
-        mensaje:'Tus gastos totales son '+fmt(totalGastos)+' ('+pctGasto+'% de tus ingresos). A partir del próximo mes podrás ver comparativas con meses anteriores.'
+        titulo:'Primer mes registrado',
+        mensaje:'Tus gastos totales representan el '+pctGasto+'% de tus ingresos ('+fmt(totalGastos)+' de '+fmt(ing)+'). Desde el próximo mes verás comparativas mensuales.'
       });
     }
 
@@ -1544,7 +1702,35 @@ function renderAnalisis(){
   if(!isPro){show('analisis-basico-msg');hide('analisis-pro-content');return;}
   hide('analisis-basico-msg');show('analisis-pro-content');
   mpRecalcDash();renderInsights();cargarContextoAnalisis();
+  renderHistorial();
 }
+
+function renderHistorial(){
+  var lista=g('historial-lista');
+  var vacio=g('historial-vacio');
+  if(!lista)return;
+  // Leer historial real desde localStorage
+  try{
+    var raw=localStorage.getItem('ax_hist_v2');
+    if(!raw){if(vacio)vacio.style.display='';lista.innerHTML='';return;}
+    var hist=JSON.parse(raw);
+    if(!hist||!hist.mes){if(vacio)vacio.style.display='';lista.innerHTML='';return;}
+    if(vacio)vacio.style.display='none';
+    var disp=hist.ingresos-(hist.totalGastos||0)-(hist.ahorro||0);
+    var isPos=disp>=0;
+    lista.innerHTML='<div style="background:var(--navy2);border-radius:var(--rs);padding:13px;border:.5px solid var(--line);">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+      +'<span style="font-size:13px;font-weight:700;color:var(--t1);">'+hist.mes.charAt(0).toUpperCase()+hist.mes.slice(1)+'</span>'
+      +'<span class="tag '+(isPos?'t-green':'t-red')+'">Disponible '+fmt(disp)+'</span>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">'
+      +'<div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Ingresos</div><div style="font-size:13px;font-weight:700;color:var(--green);">'+fmt(hist.ingresos)+'</div></div>'
+      +'<div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Gastos</div><div style="font-size:13px;font-weight:700;color:var(--red);">'+fmt(hist.totalGastos||0)+'</div></div>'
+      +'<div><div style="font-size:10px;color:var(--t3);margin-bottom:2px;">Variables</div><div style="font-size:13px;font-weight:700;color:var(--amber);">'+fmt(hist.vars||0)+'</div></div>'
+      +'</div></div>';
+  }catch(e){if(vacio)vacio.style.display='';lista.innerHTML='';}
+}
+window.renderHistorial=renderHistorial;
 
 function toggleHistorial(el){var d=el.querySelector('.hist-detail');if(d)d.style.display=d.style.display==='none'?'block':'none';}
 window.toggleHistorial=toggleHistorial;
@@ -2087,6 +2273,486 @@ function exportSII(){
 }
 window.exportSII=exportSII;
 
+
+// ════════════════════════════════════════════════════════
+// MÓDULO: AgendaService
+// Compromisos financieros futuros (por pagar / por cobrar)
+// Estado: localStorage 'ax_agenda_v1' — desacoplado de mpData
+// ════════════════════════════════════════════════════════
+var AgendaService=(function(){
+  var KEY='ax_agenda_v1';
+
+  function _leer(){
+    try{var r=localStorage.getItem(KEY);return r?JSON.parse(r):[];}
+    catch(e){return [];}
+  }
+  function _guardar(items){
+    try{localStorage.setItem(KEY,JSON.stringify(items));}catch(e){}
+  }
+  function _id(){return 'ag_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
+
+  // ── API pública ──
+  function agregar(item){
+    var items=_leer();
+    item.id=_id();
+    item.estado='pendiente'; // pendiente | pagado
+    item.creadoEn=new Date().toISOString();
+    items.push(item);
+    _guardar(items);
+    return item;
+  }
+
+  function listar(filtro){
+    var items=_leer();
+    // Ordenar por fecha ascendente
+    items.sort(function(a,b){return new Date(a.fecha)-new Date(b.fecha);});
+    if(filtro&&filtro!=='todos')items=items.filter(function(i){return i.tipo===filtro;});
+    return items;
+  }
+
+  function marcarPagado(id){
+    var items=_leer();
+    var item=items.find(function(i){return i.id===id;});
+    if(!item)return null;
+    item.estado='pagado';
+    item.pagadoEn=new Date().toISOString();
+    _guardar(items);
+    return item;
+  }
+
+  function eliminar(id){
+    var items=_leer().filter(function(i){return i.id!==id;});
+    _guardar(items);
+  }
+
+  // Compromisos en los próximos N días (pendientes)
+  function proximos(dias){
+    var hoy=new Date();hoy.setHours(0,0,0,0);
+    var limite=new Date(hoy);limite.setDate(limite.getDate()+dias);
+    return _leer().filter(function(i){
+      if(i.estado!=='pendiente')return false;
+      var f=new Date(i.fecha);f.setHours(0,0,0,0);
+      return f>=hoy&&f<=limite;
+    }).sort(function(a,b){return new Date(a.fecha)-new Date(b.fecha);});
+  }
+
+  // Vencidos (fecha pasada, aún pendientes)
+  function vencidos(){
+    var hoy=new Date();hoy.setHours(0,0,0,0);
+    return _leer().filter(function(i){
+      if(i.estado!=='pendiente')return false;
+      var f=new Date(i.fecha);f.setHours(0,0,0,0);
+      return f<hoy&&i.tipo==='pagar';
+    });
+  }
+
+  // Proyección: disponible actual − compromisos por pagar pendientes
+  function impactoDisponible(disponibleActual){
+    var pendientes=_leer().filter(function(i){return i.estado==='pendiente'&&i.tipo==='pagar';});
+    var totalPagar=pendientes.reduce(function(s,i){return s+i.monto;},0);
+    var porCobrar=_leer().filter(function(i){return i.estado==='pendiente'&&i.tipo==='cobrar';});
+    var totalCobrar=porCobrar.reduce(function(s,i){return s+i.monto;},0);
+    return{
+      proyectado:disponibleActual-totalPagar+totalCobrar,
+      totalPagar:totalPagar,
+      totalCobrar:totalCobrar,
+      pendientes:pendientes.length
+    };
+  }
+
+  // Totales por tipo
+  function totales(){
+    var items=_leer().filter(function(i){return i.estado==='pendiente';});
+    var pagar=items.filter(function(i){return i.tipo==='pagar';}).reduce(function(s,i){return s+i.monto;},0);
+    var cobrar=items.filter(function(i){return i.tipo==='cobrar';}).reduce(function(s,i){return s+i.monto;},0);
+    return{pagar:pagar,cobrar:cobrar,total:items.length};
+  }
+
+  return{agregar:agregar,listar:listar,marcarPagado:marcarPagado,eliminar:eliminar,
+         proximos:proximos,vencidos:vencidos,impactoDisponible:impactoDisponible,totales:totales};
+})();
+
+// ════════════════════════════════════════════════════════
+// UI: Agenda — funciones de interacción
+// ════════════════════════════════════════════════════════
+var agTipoActual='pagar';
+var agFiltroActual='todos';
+
+var agSubtipoActual='fijo'; // subtipo para "por pagar": fijo o variable
+
+function agSelTipo(tipo){
+  agTipoActual=tipo;
+  var p=g('ag-tipo-pagar'),c=g('ag-tipo-cobrar');
+  if(p)p.classList.toggle('on',tipo==='pagar');
+  if(c)c.classList.toggle('on',tipo==='cobrar');
+  // Mostrar/ocultar selector de subtipo
+  var sw=g('ag-subtipo-wrap');
+  if(sw)sw.style.display=tipo==='pagar'?'':'none';
+}
+window.agSelTipo=agSelTipo;
+
+function agSelSubtipo(subtipo){
+  agSubtipoActual=subtipo;
+  var f=g('ag-subtipo-fijo'),v=g('ag-subtipo-variable');
+  if(f)f.classList.toggle('on',subtipo==='fijo');
+  if(v)v.classList.toggle('on',subtipo==='variable');
+}
+window.agSelSubtipo=agSelSubtipo;
+
+function agFiltrar(f){
+  agFiltroActual=f;
+  ['todos','pagar','cobrar'].forEach(function(x){
+    var el=g('ag-f-'+x);if(el)el.classList.toggle('on',x===f);
+  });
+  renderAgenda();
+}
+window.agFiltrar=agFiltrar;
+
+function abrirFormAgenda(){
+  var ov=g('ag-modal-ov');if(!ov)return;
+  ov.style.display='flex';
+  // Default fecha = hoy
+  var inp=g('ag-inp-fecha');
+  if(inp&&!inp.value){
+    var d=new Date();
+    inp.value=d.toISOString().split('T')[0];
+  }
+  setTimeout(function(){var n=g('ag-inp-nombre');if(n)n.focus();},200);
+}
+window.abrirFormAgenda=abrirFormAgenda;
+
+function cerrarFormAgenda(){
+  var ov=g('ag-modal-ov');if(ov)ov.style.display='none';
+  // Limpiar
+  ['ag-inp-nombre','ag-inp-monto'].forEach(function(id){var e=g(id);if(e)e.value='';});
+  var r=g('ag-recurrente');if(r)r.checked=false;
+}
+window.cerrarFormAgenda=cerrarFormAgenda;
+
+function agGuardar(){
+  var nombre=(g('ag-inp-nombre')?g('ag-inp-nombre').value.trim():'');
+  var montoRaw=(g('ag-inp-monto')?g('ag-inp-monto').value:'');
+  var fechaVal=(g('ag-inp-fecha')?g('ag-inp-fecha').value:'');
+  var recurrente=g('ag-recurrente')?g('ag-recurrente').checked:false;
+  var monto=pa(montoRaw);
+  if(!nombre){alert('Ingresa una descripción.');return;}
+  if(!monto){alert('Ingresa un monto válido.');return;}
+  if(!fechaVal){alert('Selecciona una fecha.');return;}
+  AgendaService.agregar({nombre:nombre,monto:monto,fecha:fechaVal,tipo:agTipoActual,subtipo:agTipoActual==='pagar'?agSubtipoActual:'cobrar',recurrente:recurrente});
+  cerrarFormAgenda();
+  renderAgenda();
+  actualizarProyeccion();
+  actualizarDashboardAgenda();
+}
+window.agGuardar=agGuardar;
+
+function agPagar(id){
+  var item=AgendaService.marcarPagado(id);
+  if(!item)return;
+  // Convertir en gasto real respetando el subtipo del compromiso
+  if(item.tipo==='pagar'){
+    // Los compromisos marcados como fijos (ej: arriendo, crédito) van a fijos
+    // Los marcados como variables (ej: pago puntual) van a variables
+    var tipoGasto=item.subtipo||'variable';
+    var emoji=tipoGasto==='fijo'?'📌':'💸';
+    registrarGasto(item.monto,item.nombre,tipoGasto,emoji,'Compromiso');
+  }
+  renderAgenda();
+  actualizarProyeccion();
+  actualizarDashboardAgenda();
+}
+window.agPagar=agPagar;
+
+function agEliminar(id){
+  AgendaService.eliminar(id);
+  renderAgenda();
+  actualizarProyeccion();
+  actualizarDashboardAgenda();
+}
+window.agEliminar=agEliminar;
+
+// ── Render principal de la agenda ──
+function renderAgenda(){
+  var items=AgendaService.listar(agFiltroActual==='todos'?null:agFiltroActual);
+  var lista=g('ag-lista');
+  var vacio=g('ag-vacio');
+  var resumen=g('ag-resumen');
+  if(!lista)return;
+
+  if(items.length===0){
+    lista.innerHTML='';
+    if(vacio)vacio.style.display='';
+    if(resumen)resumen.style.display='none';
+    txt('ag-titulo','Agenda');
+    txt('ag-subtitulo','Sin compromisos registrados');
+    return;
+  }
+
+  if(vacio)vacio.style.display='none';
+  if(resumen)resumen.style.display='';
+
+  var tots=AgendaService.totales();
+  var hoy=new Date();hoy.setHours(0,0,0,0);
+
+  // Actualizar header
+  var total=tots.total;
+  txt('ag-titulo','Agenda financiera');
+  txt('ag-subtitulo',total+' compromiso'+(total!==1?'s':'')+' registrado'+(total!==1?'s':''));
+  txt('ag-total-pagar',fmt(tots.pagar));
+  txt('ag-total-cobrar',fmt(tots.cobrar));
+
+  lista.innerHTML='';
+  items.forEach(function(item){
+    var fItem=new Date(item.fecha+'T12:00:00');
+    var diff=Math.round((fItem-hoy)/(1000*60*60*24));
+    var esPagado=item.estado==='pagado';
+    var esVencido=diff<0&&!esPagado&&item.tipo==='pagar';
+    var esHoy=diff===0&&!esPagado;
+    var esProximo=diff>0&&diff<=7&&!esPagado;
+
+    // Estado visual
+    var estadoColor='var(--t3)';
+    var estadoLabel='';
+    var estadoBg='var(--frost)';
+    if(esPagado){estadoLabel='Listo';estadoColor='var(--green)';estadoBg='var(--gdim)';}
+    else if(esVencido){estadoLabel='Vencido';estadoColor='var(--red)';estadoBg='var(--rdim)';}
+    else if(esHoy){estadoLabel='Hoy';estadoColor='var(--amber)';estadoBg='var(--adim)';}
+    else if(esProximo){estadoLabel='En '+diff+'d';estadoColor='var(--b2)';estadoBg='var(--edim)';}
+    else if(diff>0){estadoLabel=diff>30?'+30d':diff+'d';estadoColor='var(--t3)';estadoBg='var(--frost)';}
+
+    var tipoEmoji=item.tipo==='pagar'?'💸':'💰';
+    var tipoColor=item.tipo==='pagar'?'var(--red)':'var(--green)';
+    var montoStr=fmt(item.monto);
+
+    // Formatear fecha
+    var meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var fd=new Date(item.fecha+'T12:00:00');
+    var fechaStr=fd.getDate()+' '+meses[fd.getMonth()];
+
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--navy);border-radius:var(--r);border:.5px solid '+(esVencido?'rgba(255,90,90,.3)':esPagado?'rgba(0,196,122,.2)':'var(--line2)')+';padding:14px 16px;margin-bottom:8px;'+(esPagado?'opacity:.6;':'');
+
+    card.innerHTML='<div style="display:flex;align-items:flex-start;gap:12px;">'
+      +'<div style="width:40px;height:40px;border-radius:10px;background:var(--navy2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">'+tipoEmoji+'</div>'
+      +'<div style="flex:1;min-width:0;">'
+        +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px;">'
+          +'<span style="font-size:13px;font-weight:700;color:var(--t1);">'+item.nombre+'</span>'
+          +(item.recurrente?'<span style="font-size:9px;font-weight:700;background:var(--edim);color:var(--b2);padding:2px 6px;border-radius:4px;">Mensual</span>':'')
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:8px;">'
+          +'<span style="font-size:11px;color:var(--t3);">'+fechaStr+'</span>'
+          +(estadoLabel?'<span style="font-size:10px;font-weight:700;background:'+estadoBg+';color:'+estadoColor+';padding:2px 7px;border-radius:4px;">'+estadoLabel+'</span>':'')
+        +'</div>'
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0;">'
+        +'<div style="font-size:15px;font-weight:800;color:'+tipoColor+';font-family:monospace;">'+montoStr+'</div>'
+        +(!esPagado
+          ?'<div style="display:flex;gap:5px;margin-top:6px;justify-content:flex-end;">'
+            +'<button data-id="'+item.id+'" data-action="pagar" style="font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;background:var(--gdim);color:var(--green);border:.5px solid rgba(0,196,122,.3);cursor:pointer;" title="Marca como pagado y registra en tu dashboard">'+(item.tipo==='pagar'?'✓ Pagado':'✓ Cobrado')+'</button>'
+            +'<button data-id="'+item.id+'" data-action="eliminar" style="font-size:11px;padding:4px 8px;border-radius:5px;background:var(--frost);color:var(--t3);border:.5px solid var(--line);cursor:pointer;">×</button>'
+          +'</div>'
+          :'<div style="font-size:10px;color:var(--green);margin-top:4px;">✓ Completado</div>')
+      +'</div>'
+    +'</div>';
+
+    lista.appendChild(card);
+  });
+}
+window.renderAgenda=renderAgenda;
+
+// ── Proyección financiera ──
+function actualizarProyeccion(){
+  var dispActual=mpData.ingresos-mpData.fijos-mpData.vars-mpData.ahorro;
+  var impacto=AgendaService.impactoDisponible(dispActual);
+  var proy=g('ag-proyeccion');
+  var proyNum=g('ag-proy-num');
+  var proySub=g('ag-proy-sub');
+  if(!proy)return;
+  if(impacto.pendientes===0){proy.style.display='none';return;}
+  proy.style.display='';
+  if(proyNum){
+    proyNum.textContent=fmt(impacto.proyectado);
+    proyNum.style.color=impacto.proyectado<0?'var(--red)':'var(--v2)';
+  }
+  var partes=[];
+  if(impacto.totalPagar>0)partes.push(fmt(impacto.totalPagar)+' en compromisos por pagar');
+  if(impacto.totalCobrar>0)partes.push('+'+fmt(impacto.totalCobrar)+' por cobrar');
+  if(proySub){
+    var subtxt='Disponible actual: '+fmt(dispActual);
+    if(impacto.totalPagar>0)subtxt+=' — Por pagar: '+fmt(impacto.totalPagar);
+    if(impacto.totalCobrar>0)subtxt+=' — Por cobrar: +'+fmt(impacto.totalCobrar);
+    subtxt+=' · Los compromisos impactan el dashboard al marcarlos como pagados.';
+    proySub.textContent=subtxt;
+  }
+}
+window.actualizarProyeccion=actualizarProyeccion;
+
+// ── Card de agenda en el dashboard (paso 5) ──
+function actualizarDashboardAgenda(){
+  var card=g('dash-agenda-card');if(!card)return;
+  var proximos7=AgendaService.proximos(7);
+  var vencidos=AgendaService.vencidos();
+  var todos=[].concat(vencidos,proximos7).slice(0,3);
+  if(todos.length===0){card.style.display='none';return;}
+  card.style.display='';
+  var lista=g('dash-agenda-lista');if(!lista)return;
+  lista.innerHTML='';
+  todos.forEach(function(item){
+    var hoy=new Date();hoy.setHours(0,0,0,0);
+    var fItem=new Date(item.fecha+'T12:00:00');
+    var diff=Math.round((fItem-hoy)/(1000*60*60*24));
+    var esVencido=diff<0;
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:.5px solid var(--line);';
+    row.innerHTML='<div style="display:flex;align-items:center;gap:8px;">'
+      +'<span style="font-size:14px;">'+(item.tipo==='pagar'?'💸':'💰')+'</span>'
+      +'<div><div style="font-size:13px;font-weight:600;color:var(--t1);">'+item.nombre+'</div>'
+      +'<div style="font-size:11px;color:'+(esVencido?'var(--red)':'var(--t3)')+'">'
+      +(esVencido?'Vencido hace '+Math.abs(diff)+'d':diff===0?'Vence hoy':'Vence en '+diff+'d')
+      +'</div></div></div>'
+      +'<span style="font-size:13px;font-weight:700;color:'+(item.tipo==='pagar'?'var(--red)':'var(--green)')+';font-family:monospace;">'+fmt(item.monto)+'</span>';
+    lista.appendChild(row);
+  });
+  // Última fila sin borde
+  var rows=lista.querySelectorAll('div[style*="border-bottom"]');
+  if(rows.length>0)rows[rows.length-1].style.borderBottom='none';
+}
+window.actualizarDashboardAgenda=actualizarDashboardAgenda;
+
+
+// ════════════════════════════════════════════════
+// AUTOCOMPLETADO — Drawer de gastos
+// Fuentes: items del DOM (fijos+vars) + agenda + frecuentes hardcoded
+// ════════════════════════════════════════════════
+var AC_FRECUENTES = [
+  'Almuerzo','Café','Transporte','Uber','Supermercado','Farmacia',
+  'Gasolina','Combustible','Internet','Netflix','Spotify','Arriendo',
+  'Gym','Cine','Delivery','Colación','Estacionamiento','Peaje'
+];
+
+function acObtenerHistorial(){
+  var nombres=[];
+  // Del DOM: gastos fijos y variables ya registrados
+  document.querySelectorAll('#mp-fijos-list [data-monto], #mp-vars-list [data-monto]').forEach(function(row){
+    if(row.children.length>=2){
+      var info=row.children[1];
+      if(info&&info.children.length>0){
+        var n=info.children[0].textContent.trim();
+        if(n&&nombres.indexOf(n)<0)nombres.push(n);
+      }
+    }
+  });
+  // De la agenda
+  AgendaService.listar().forEach(function(item){
+    if(item.nombre&&nombres.indexOf(item.nombre)<0)nombres.push(item.nombre);
+  });
+  // Frecuentes como base
+  AC_FRECUENTES.forEach(function(n){if(nombres.indexOf(n)<0)nombres.push(n);});
+  return nombres;
+}
+
+function acSugerir(){
+  var inp=g('gasto-desc');
+  var box=g('ac-sugerencias');
+  if(!inp||!box)return;
+  var q=inp.value.trim().toLowerCase();
+  if(!q||q.length<2){box.style.display='none';return;}
+  var historial=acObtenerHistorial();
+  var matches=historial.filter(function(n){
+    return n.toLowerCase().indexOf(q)>=0&&n.toLowerCase()!==q;
+  }).slice(0,4);
+  if(matches.length===0){box.style.display='none';return;}
+  box.innerHTML='';
+  matches.forEach(function(m,i){
+    var item=document.createElement('div');
+    item.style.cssText='padding:10px 14px;font-size:13px;color:var(--t2);cursor:pointer;border-bottom:'+(i<matches.length-1?'.5px solid var(--line)':'none')+';';
+    // Resaltar la parte que coincide
+    var idx=m.toLowerCase().indexOf(q);
+    item.innerHTML=m.slice(0,idx)+'<strong style="color:var(--t1);">'+m.slice(idx,idx+q.length)+'</strong>'+m.slice(idx+q.length);
+    item.addEventListener('mousedown',function(e){
+      e.preventDefault();
+      inp.value=m;
+      box.style.display='none';
+      inp.focus();
+    });
+    item.addEventListener('touchstart',function(e){
+      e.preventDefault();
+      inp.value=m;
+      box.style.display='none';
+    });
+    box.appendChild(item);
+  });
+  box.style.display='';
+}
+window.acSugerir=acSugerir;
+
+function acCerrar(){
+  var box=g('ac-sugerencias');if(box)box.style.display='none';
+}
+
+
+// ════════════════════════════════════════════════
+// VOZ EN AGENDA — opcional, junto al campo nombre
+// Patrón: voz → extrae nombre + monto → rellena campos
+// ════════════════════════════════════════════════
+var agRecognition=null;
+
+function agIniciarVoz(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Tu navegador no soporta reconocimiento de voz. Usa Chrome o Safari.');return;}
+  var btn=g('ag-voz-btn');
+  var estado=g('ag-voz-estado');
+  agRecognition=new SR();agRecognition.lang='es-CL';agRecognition.continuous=false;agRecognition.interimResults=false;
+  // Estado grabando
+  if(btn)btn.style.background='var(--rdim)';
+  if(estado){estado.style.display='';estado.style.background='var(--rdim)';estado.style.color='var(--red)';estado.textContent='🎤 Escuchando...';}
+  agRecognition.onresult=function(e){agProcesarVoz(e.results[0][0].transcript);};
+  agRecognition.onerror=function(ev){
+    if(btn)btn.style.background='var(--navy2)';
+    if(estado){estado.style.display='';estado.style.background='var(--rdim)';estado.style.color='var(--red)';estado.textContent='Error: '+ev.error+'. Intenta de nuevo.';}
+    setTimeout(function(){if(estado)estado.style.display='none';},2500);
+  };
+  agRecognition.onend=function(){if(btn)btn.style.background='var(--navy2)';};
+  agRecognition.start();
+}
+window.agIniciarVoz=agIniciarVoz;
+
+function agProcesarVoz(transcript){
+  var estado=g('ag-voz-estado');
+  var texto=transcript.toLowerCase();
+  // Extraer monto — mismo algoritmo que el drawer
+  var monto=0;
+  var textoN=texto,prev='';
+  while(prev!==textoN){prev=textoN;textoN=textoN.replace(/(\d+)\s+(\d{3})(?=\s|$|[^\d])/g,function(m,a,b){return a+b;});}
+  var numMatch=textoN.match(/\d[\d.,]*/g);
+  if(numMatch){var nums=numMatch.map(function(n){return pa(n);});monto=Math.max.apply(null,nums);}
+  if(!monto){
+    var palabras={'cien mil':100000,'cincuenta mil':50000,'cuarenta mil':40000,'treinta mil':30000,
+      'veinticinco mil':25000,'veinte mil':20000,'quince mil':15000,'diez mil':10000,
+      'nueve mil':9000,'ocho mil':8000,'siete mil':7000,'seis mil':6000,'cinco mil':5000,
+      'cuatro mil':4000,'tres mil':3000,'dos mil':2000,'mil':1000};
+    Object.keys(palabras).sort(function(a,b){return b.length-a.length;}).forEach(function(k){if(!monto&&texto.indexOf(k)>=0)monto=palabras[k];});
+  }
+  // Extraer descripción — palabras no numéricas ni "pesos"
+  var palabrasDesc=transcript.split(/\s+/).filter(function(w){
+    return !/^\d+$/.test(w.replace(/[.,]/g,''))&&!/^pesos?$/i.test(w)&&w.length>0;
+  });
+  var desc=palabrasDesc.join(' ').trim()||'';
+  // Rellenar campos
+  var inpNombre=g('ag-inp-nombre'),inpMonto=g('ag-inp-monto');
+  if(inpNombre&&desc)inpNombre.value=desc;
+  if(inpMonto&&monto)inpMonto.value='$ '+monto.toLocaleString('es-CL');
+  // Mostrar confirmación
+  if(estado){
+    estado.style.display='';
+    estado.style.background='var(--gdim)';
+    estado.style.color='var(--green)';
+    estado.textContent='✓ "'+(desc||'—')+'" · '+(monto?fmt(monto):'sin monto')+' — Revisa y guarda';
+    setTimeout(function(){estado.style.display='none';},4000);
+  }
+}
+window.agProcesarVoz=agProcesarVoz;
+
 // ══ INIT ══
 document.addEventListener('DOMContentLoaded',function(){
   // Migrar: limpiar clave de historial vieja si existe
@@ -2094,7 +2760,22 @@ document.addEventListener('DOMContentLoaded',function(){
   var ov=g('drawer-ov');
   if(ov)ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('on');});
   var keys=[['gasto-monto',guardarGasto],['gasto-desc',guardarGasto]];
+  // Cerrar autocompletado al perder foco
+  var descInp=g('gasto-desc');
+  if(descInp)descInp.addEventListener('blur',function(){setTimeout(acCerrar,150);});
   keys.forEach(function(k){var e=g(k[0]);if(e)e.addEventListener('keydown',function(ev){if(ev.key==='Enter')k[1]();});});
+  // Agenda: event delegation para botones de items
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('[data-action]');
+    if(!btn)return;
+    var id=btn.getAttribute('data-id');
+    var action=btn.getAttribute('data-action');
+    if(action==='pagar')agPagar(id);
+    else if(action==='eliminar')agEliminar(id);
+  });
+  // Agenda modal: cerrar al tocar fuera
+  var agOv=g('ag-modal-ov');
+  if(agOv)agOv.addEventListener('click',function(e){if(e.target===agOv)cerrarFormAgenda();});
 });
 
 })();
